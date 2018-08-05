@@ -2,7 +2,9 @@
 An API that automatically generates listings on various e-commerce websites
 
 ## Build with Gradle 4.9
-A wrapper version of Gradle 4.9 will be used to build the project.
+
+A wrapper version of Gradle 4.9 will be used to build the project. The wrapper
+allows developer run the project without having to install gradle globally on their machine. This will ensure all developer are using the same version on gradle.
 #### Commands
 Read the gradle docs for more information
 - ```gradle build``` will compile the project.
