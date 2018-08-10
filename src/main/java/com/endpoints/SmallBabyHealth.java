@@ -1,0 +1,18 @@
+package com.endpoints;
+
+//@RequestController Is used for Spring MVC to handle web request
+import org.springframework.web.bind.annotation.RestController;
+//@RequestMaping maps / to the health() method
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+
+//Produces a simple endpoint to check that the server is alive
+
+@RestController
+public class SmallBabyHealth {
+
+    @RequestMapping("/googoo")
+    public ResponseEntity health() {
+	return ResponseEntity.status(200).body("gaga!\n");
+    }
+}

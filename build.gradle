@@ -7,6 +7,7 @@ plugins {
     // Apply the java plugin to add support for Java
     id 'java'
 
+    //TODO: Question for T. Do we not need application? Why is it commented it out?
     // Apply the application plugin to add support for building an application
     // id 'application'
 
@@ -14,6 +15,9 @@ plugins {
     id 'org.springframework.boot' version '2.0.4.RELEASE'
 }
 
+//idea is for InteliJ
+apply plugin: 'idea'
+//Provides Maven-like dependency management functionality
 apply plugin: 'io.spring.dependency-management'
 
 // Define the main class for the application
@@ -31,7 +35,6 @@ repositories {
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
-	  //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Use JUnit 5 test framework
     testImplementation(
