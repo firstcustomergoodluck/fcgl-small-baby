@@ -36,7 +36,7 @@ Read the gradle docs for more information
 1. ./gradlew build
 2. java -jar {jar_file.jar} ```Example: java -jar build/libs/fcgl-small-baby-0.0.1-SNAPSHOT.jar``` 
 
-Once it is up the following should work:
+Once it is up the following should work://TODO: In my personal its 8081 but on my work its 8080. 
 ```
 curl http://localhost:8081/googoo
 gaga!
