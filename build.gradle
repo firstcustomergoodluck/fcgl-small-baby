@@ -3,36 +3,19 @@
  * user guide available at https://docs.gradle.org/4.9/userguide/tutorial_java_projects.html
  */
 
-buildscript {
-    ext {
-        springBootVersion = '2.0.4.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-//        maven {
-//            url "https://puglins.gradle.org/m2/"
-//        }
-    }
-
-    //TODO: Need to add mysql dependency
-    dependencies {
-        'mysql:mysql-connector-java:8.0.12'
-//        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-//        classpath 'nu.studer:gradle-jooq-plugin:3.0.1'
-//        classpath 'gradle.plugin.com.boxfuse.client:flyway-release:5.1.4'
-    }
-}
-
 
 plugins {
     id 'java'
     id 'application'
     id 'org.springframework.boot' version '2.0.4.RELEASE'
+//    id 'jooq'
     id 'nu.studer.jooq' version '3.0.1'
-    id 'org.flywaydb.flyway' version '5.1.4'//TODO: Not sure if this does the trick
+    //id 'org.flywaydb.flyway' version '5.1.4'//TODO: Not sure if this does the trick
+//id 'mysql'
+//id "com.github.michaelruocco.embedded-mysql-plugin" version "2.1.7"
 }
 
+//apply plugin: 'jooq'
 apply plugin: 'idea'//IntelliJ
 //Provides Maven-like dependency management functionality
 apply plugin: 'io.spring.dependency-management'
@@ -42,29 +25,28 @@ group = 'com.fcgl'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-//bootJar {
-//    basename = 'gs-accessing-data-mysql'
-//    version = '0.1.0'
-//}
 
 // In this section you declare where to find the dependencies of your project
-//repositories {
-//    // Use jcenter for resolving your dependencies.
-//    // You can declare any Maven/Ivy/file repository here.
-//    jcenter()
-//    mavenCentral()
-//}
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+    mavenCentral()
+}
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    //implementation 'org.springframework.boot:spring-boot-starter-jooq'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    implementation 'org.flywaydb:flyway-core:5.1.4'
+    //implementation 'org.flywaydb:flyway-core:5.1.4'
 
+
+  //  implementation 'org.jooq:jooq:3.2.2'
+  //  implementation 'org.jooq:jooq-meta:3.2.2'
     implementation 'mysql:mysql-connector-java:8.0.12'//TODO: Not sure if this does the trick
 
     // Use JUnit 5 test framework
@@ -76,18 +58,33 @@ dependencies {
     )
     // Mockito
     testImplementation "org.mockito:mockito-core:2.21.0"
+
+implementation "javax.xml.bind:jaxb-api:2.3.0"
+implementation "com.sun.xml.bind:jaxb-impl:2.3.0"
+implementation "org.glassfish.jaxb:jaxb-runtime:2.3.0"
+implementation "javax.activation:activation:1.1.1"
+    //implementation "com.sun.activation:javax.activation:1.2.0"
+    //implementation "com.sun.xml.bind:jaxb-core:2.3.0"
+    //implementation "org.glassfish.jaxb:jaxb-runtime:2.2.11"
 }
 
 jooq {
-    jdbc {
-        url 'jdbc:mysql://localhost:3306'
-        driver 'com.mysql.jdbc.Driver'
-        user ''//TODO insert user
-        password ''//TODO insert password
-    }
+sample(sourceSets.main){
+jdbc {
+url = 'jdbc:mysql://localhost:3306'
+driver = 'com.mysql.jdbc.Driver'
+user = 'springuser'//Change to your user
+password = 'ThePassword'//Change to your password
 }
-
-
+generator {
+database {
+name = 'org.jooq.util.mysql.MySQLDatabase'
+inputSchema = 'db_example'
+includes = '.*'
+}
+}
+}
+}
 
 
 mainClassName = 'App'
