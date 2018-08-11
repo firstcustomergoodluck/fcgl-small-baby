@@ -3,28 +3,23 @@
  * user guide available at https://docs.gradle.org/4.9/userguide/tutorial_java_projects.html
  */
 
-
 plugins {
     id 'java'
     id 'application'
     id 'org.springframework.boot' version '2.0.4.RELEASE'
-//    id 'jooq'
-    id 'nu.studer.jooq' version '3.0.1'
-    //id 'org.flywaydb.flyway' version '5.1.4'//TODO: Not sure if this does the trick
-//id 'mysql'
-//id "com.github.michaelruocco.embedded-mysql-plugin" version "2.1.7"
+    id 'nu.studer.jooq' version '3.0.1' //https://github.com/etiennestuder/gradle-jooq-plugin
+    //id 'org.flywaydb.flyway' version '5.1.4'//good for migration
 }
 
-//apply plugin: 'jooq'
 apply plugin: 'idea'//IntelliJ
-//Provides Maven-like dependency management functionality
-apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.spring.dependency-management'//Provides Maven-like dependency management functionality
 
 // Define the main class for the application
 group = 'com.fcgl'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-
+ext['jooq.version'] = '3.11.2'
+mainClassName = 'App'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -39,15 +34,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     //implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    jooqRuntime 'mysql:mysql-connector-java:8.0.12'
 
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.jooq:jooq'
 
-    //implementation 'org.flywaydb:flyway-core:5.1.4'
-
-
-  //  implementation 'org.jooq:jooq:3.2.2'
-  //  implementation 'org.jooq:jooq-meta:3.2.2'
-    implementation 'mysql:mysql-connector-java:8.0.12'//TODO: Not sure if this does the trick
+    implementation 'org.jooq:jooq-meta:+'
+    implementation 'org.jooq:jooq-meta-extensions:+'
+    implementation 'org.jooq:jooq-codegen:+'
+    implementation 'org.jooq:jooq-codegen-maven:+'
 
     // Use JUnit 5 test framework
     testImplementation(
@@ -59,32 +54,31 @@ dependencies {
     // Mockito
     testImplementation "org.mockito:mockito-core:2.21.0"
 
-implementation "javax.xml.bind:jaxb-api:2.3.0"
-implementation "com.sun.xml.bind:jaxb-impl:2.3.0"
-implementation "org.glassfish.jaxb:jaxb-runtime:2.3.0"
-implementation "javax.activation:activation:1.1.1"
-    //implementation "com.sun.activation:javax.activation:1.2.0"
-    //implementation "com.sun.xml.bind:jaxb-core:2.3.0"
-    //implementation "org.glassfish.jaxb:jaxb-runtime:2.2.11"
+    //implementation 'org.flywaydb:flyway-core:5.1.4'//Useful for migrations
+
 }
 
+//There are more options that we might want to add
+//https://www.jooq.org/doc/3.11/manual/getting-started/tutorials/jooq-in-7-steps/jooq-in-7-steps-step3/
 jooq {
-sample(sourceSets.main){
-jdbc {
-url = 'jdbc:mysql://localhost:3306'
-driver = 'com.mysql.jdbc.Driver'
-user = 'springuser'//Change to your user
-password = 'ThePassword'//Change to your password
-}
-generator {
-database {
-name = 'org.jooq.util.mysql.MySQLDatabase'
-inputSchema = 'db_example'
-includes = '.*'
-}
-}
-}
+    version = '3.11.2'
+    edition = 'OSS'
+    sample(sourceSets.main){
+        jdbc {
+            driver = 'com.mysql.cj.jdbc.Driver'
+            url = 'jdbc:mysql://localhost:3306/?useSSL=false&serverTimezone=UTC'//change to true for production
+            user = 'fcgl-user'//Change to your user
+            password = 'password'//Change to your password
+
+        }
+        generator {
+            database {
+            name = 'org.jooq.meta.mysql.MySQLDatabase'
+            inputSchema = 'fcgl_local'
+            includes = '.*'
+            }
+        }
+    }
 }
 
 
-mainClassName = 'App'

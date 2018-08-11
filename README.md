@@ -26,6 +26,24 @@ Read the gradle docs for more information
   - PR title: TEST-123 Updated README
   - Branch: git checkout -b TEST-123_updatingReadMe
 
+##Database Set Up
+* Install mysql on local machine
+    * Mac: ```$ brew install mysql```
+    * //TODO: Insert Link
+* Start mysql server:  ```$ mysql.server start```
+    
+* Secure Installation ```$ mysql_secure_installation```
+   
+* Log into MySql as root user ```sudo mysql --password```
+
+* TODO: How to get the database schema on a developers machine?
+
+* Create a user: ```mysql> CREATE USER 'fcgl_user'@'localhost' indentified by 'password'```
+
+* Give user privileges ```mysql> GRANT ALL PRIVILEGES ON fcgl_local.* to 'fcgl_user'@'localhost'; ```
+
+* You can now log into mysql:
+```$ mysql -u fcgl-user -p```
 
 ##Dev Set Up
 
