@@ -1,4 +1,4 @@
-package com.endpoints;
+package com.fcgl.endpoints;
 
 //@RequestController Is used for Spring MVC to handle web request
 import org.springframework.web.bind.annotation.RestController;

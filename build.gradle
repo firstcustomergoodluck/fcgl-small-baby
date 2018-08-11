@@ -5,7 +5,7 @@
 
 plugins {
     id 'java'
-    id 'application'
+//    id 'application'
     id 'org.springframework.boot' version '2.0.4.RELEASE'
     id 'nu.studer.jooq' version '3.0.1' //https://github.com/etiennestuder/gradle-jooq-plugin
     //id 'org.flywaydb.flyway' version '5.1.4'//good for migration
@@ -19,7 +19,7 @@ group = 'com.fcgl'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 ext['jooq.version'] = '3.11.2'
-mainClassName = 'App'
+//mainClassName = 'App'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -29,14 +29,15 @@ repositories {
     mavenCentral()
 }
 
+//TODO: Should we use the spring.boot jpa? JP can put time into looking into it later
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    //implementation 'org.springframework.boot:spring-boot-starter-jooq'
     jooqRuntime 'mysql:mysql-connector-java:8.0.12'
+    implementation 'mysql:mysql-connector-java:8.0.12'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'//TODO: implement later
     implementation 'org.jooq:jooq'
 
     implementation 'org.jooq:jooq-meta:+'
@@ -65,10 +66,12 @@ jooq {
     edition = 'OSS'
     sample(sourceSets.main){
         jdbc {
-            driver = 'com.mysql.cj.jdbc.Driver'
+            //driver = 'com.mysql.cj.jdbc.Driver'
+            driver = 'com.mysql.jdbc.Driver'
             url = 'jdbc:mysql://localhost:3306/?useSSL=false&serverTimezone=UTC'//change to true for production
             user = 'fcgl-user'//Change to your user
             password = 'password'//Change to your password
+            schema = 'fcgl_local'
 
         }
         generator {
