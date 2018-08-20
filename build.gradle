@@ -5,7 +5,6 @@
 
 plugins {
     id 'java'
-//    id 'application'
     id 'org.springframework.boot' version '2.0.4.RELEASE'
     id 'nu.studer.jooq' version '3.0.1' //https://github.com/etiennestuder/gradle-jooq-plugin
     //id 'org.flywaydb.flyway' version '5.1.4'//good for migration
@@ -19,17 +18,19 @@ group = 'com.fcgl'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 ext['jooq.version'] = '3.11.2'
-//mainClassName = 'App'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
+    // Use jcenter and mavenCentral for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenCentral()
+    //references a local repository
+    flatDir {
+        dirs 'amazon-mws-v20090101-java-2016-09-21._CB476815245_/dist'
+    }
 }
 
-//TODO: Should we use the spring.boot jpa? JP can put time into looking into it later
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -38,8 +39,8 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.12'
 
     //implementation 'org.springframework.boot:spring-boot-starter-security'//TODO: implement later
-    implementation 'org.jooq:jooq'
 
+    implementation 'org.jooq:jooq'
     implementation 'org.jooq:jooq-meta:+'
     implementation 'org.jooq:jooq-meta-extensions:+'
     implementation 'org.jooq:jooq-codegen:+'
@@ -55,8 +56,13 @@ dependencies {
     // Mockito
     testImplementation "org.mockito:mockito-core:2.21.0"
 
-    //implementation 'org.flywaydb:flyway-core:5.1.4'//Useful for migrations
+    implementation 'org.apache.httpcomponents:httpclient:4.5.6'//Helps with http requests
 
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    compile name: 'MaWSJavaClientLibrary-1.1'//MWS Library
+
+    //implementation 'org.flywaydb:flyway-core:5.1.4'//Useful for migrations
 }
 
 //There are more options that we might want to add
