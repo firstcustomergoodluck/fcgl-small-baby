@@ -14,10 +14,10 @@ abstract class AbstractAMZService {
      * @return Http Client Implementation of MWS
      */
     MarketplaceWebService instantiateService() {
-        final String SecretKey = "l8ZYO9nH3glx6ZEsh3g1eiozVc5xAVkoLGgS3JFW";
+        final String SecretKey = "";
         final String appName = "fcgl";
         final String appVersion = "1.0";
-        final String AWSAccessKeyId= "AKIAI3O6BHWTDLOPPD6Q";
+        final String AWSAccessKeyId= "";
 
         MarketplaceWebServiceConfig config = new MarketplaceWebServiceConfig();
         config.setServiceURL("https://mws.amazonservices.com/"); // MWS US endpoint

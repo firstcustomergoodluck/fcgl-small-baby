@@ -29,9 +29,9 @@ import com.fcgl.Listing.IGenerateFeed;
 public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed {
 
     //TODO: Need to move all of these to a config file and make it secret (look up 3rd party encryption)
-    private final String MWSAuthToken = "amzn.mws.a6b2861f-4dd3-4954-6b5f-feff6bb43662";
-    private final String merchantId = "A3D0FT2K8KCHQO";
-    private final String marketplaceId = "ATVPDKIKX0DER";
+    private final String MWSAuthToken = "";
+    private final String merchantId = "";
+    private final String marketplaceId = "";
     private final int[] retryWaitTime = {1000,4000,16000,30000};
 
     /**
