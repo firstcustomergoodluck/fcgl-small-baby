@@ -91,7 +91,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      */
     private String generateProductXML(ArrayList<ArrayList<ProductInformation>> productInformation) {
         IXMLGenerator productXML = new XMLGeneratorAMZ();
-        return productXML.generateProductXML(productInformation);
+        return productXML.generateProductXML(productInformation, getRequestId());
     }
 
     /**
