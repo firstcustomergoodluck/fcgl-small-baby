@@ -21,5 +21,5 @@ public interface IXMLGenerator {
      * @param productInformation List of List of ProductInformation objects which hold the data needed for the XML.
      * @return The location of the XML file generated
      */
-    String generateProductXML(ArrayList<ArrayList<ProductInformation>> productInformation);
+    String generateProductXML(ArrayList<ArrayList<ProductInformation>> productInformation, String requestId);
 }
