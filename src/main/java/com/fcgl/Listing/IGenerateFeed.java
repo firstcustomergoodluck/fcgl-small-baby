@@ -1,10 +1,8 @@
 package com.fcgl.Listing;
 
-import com.fcgl.Listing.Vendors.Amazon.ErrorHandlerAMZ;
-import com.fcgl.Listing.Vendors.Amazon.SubmitFeed.SubmitFeedSucessAMZ;
-
-import java.util.HashMap;
-
+/**
+ * Interface for Generating a Feed on an e-commerce site.
+ */
 public interface IGenerateFeed {
 
     Response generateFeed() throws InterruptedException;

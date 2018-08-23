@@ -1,11 +1,11 @@
 package com.fcgl.Listing;
 
 /**
- * Basic format for what should be returned to the endpoint
+ * Basic format for what should be returned to an endpoint
  *      IErrorHandler: An IErrorHandler Object
  *                      OR
- *      ISuccessHandler: Am ISuccessHandler
- *      isError: 
+ *      ISuccessHandler: An ISuccessHandler
+ *      isError:
  */
 public interface IResponse {
 

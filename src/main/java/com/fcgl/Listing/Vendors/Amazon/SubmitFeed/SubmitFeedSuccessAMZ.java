@@ -3,6 +3,10 @@ package com.fcgl.Listing.Vendors.Amazon.SubmitFeed;
 import com.fcgl.Listing.ISuccessHandler;
 
 //TODO: Would it be good to save this in our database for our record?
+
+/**
+ * When a successful call is made to the submitFeed AMAZON API then this is what it should return
+ */
 public class SubmitFeedSuccessAMZ implements ISuccessHandler {
     private String submissionId;
     private String processingStatus;

@@ -1,5 +1,9 @@
 package com.fcgl.Listing;
 
+/**
+ * Concrete class for ErrorHandler.
+ * Any Error Handler implementation should extend this class
+ */
 public class ErrorHandler implements IErrorHandler {
     private final String ERROR_MESSAGE = "ErrorHandler has an empty %s";
     private String message;

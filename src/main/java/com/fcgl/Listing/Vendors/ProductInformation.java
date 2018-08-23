@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 /**
  * ProductInformation holds the basic product data that is needed in order to make a feed on an e-commerce website
- * productMisc: Holds data specific to a particular category. Example: A book would have an author but an
- *              Electronic device would not.
+ * productMisc: Holds data specific to a particular category.
+ *              Example: A book would have an author but an Electronic Device would not.
  */
 public class ProductInformation {
         private final String ERROR_MESSAGE = "ProductInformation has an empty %s";
@@ -19,7 +19,6 @@ public class ProductInformation {
         private LinkedList<String> bulletPoint;
         private String itemType;
         private HashMap<String, String> productMisc;
-        //TODO: Should we use quantity or availability?
 
     public ProductInformation(int SKU, String standardProductIDType, String standardProductIDValue, String title,
                        String description, LinkedList<String> bulletPoint, String itemType,

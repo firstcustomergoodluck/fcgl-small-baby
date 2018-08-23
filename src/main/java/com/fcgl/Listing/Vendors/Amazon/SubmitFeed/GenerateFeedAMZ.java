@@ -56,7 +56,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @return Response returned by Amazon Marketplace Web Services
      * @throws InterruptedException: Thread interruption
      */
-    public Response<SubmitFeedSucessAMZ, ErrorHandlerAMZ> generateFeed() throws InterruptedException {
+    public Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> generateFeed() throws InterruptedException {
         MarketplaceWebService service = instantiateService();// Instantiates MWS service
 
         ArrayList<ArrayList<ProductInformation>> productInformation = dequeu();//Gets product data from message queue
@@ -89,6 +89,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      */
     private String generateProductXML(ArrayList<ArrayList<ProductInformation>> productInformation) {
         //TODO: Look for some good third parties that can make big XML files efficiently.
+        //Could use JAXP: https://stackoverflow.com/questions/8865099/xml-file-generator-in-java
         return "";
     }
 
@@ -103,7 +104,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @throws RetryLimitException: Will be thrown when the retry limit is reached
      * @throws InterruptedException: Thread error
      */
-    private Response<SubmitFeedSucessAMZ, ErrorHandlerAMZ> submitFeed(String fileLocation, MarketplaceWebService service, int retryAttempt) throws RetryLimitException, InterruptedException {
+    private Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> submitFeed(String fileLocation, MarketplaceWebService service, int retryAttempt) throws RetryLimitException, InterruptedException {
         IdList marketplaces = new IdList(Arrays.asList(marketplaceId));
         SubmitFeedRequest request = new SubmitFeedRequest();
         request.setMerchant(merchantId);
@@ -121,7 +122,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
             return new Response<>( new ErrorHandlerAMZ(message, requestId, statusCode));
         }
 
-        Response<SubmitFeedSucessAMZ, ErrorHandlerAMZ> invokeSubmitFeedResponse =  invokeSubmitFeed(service, request);
+        Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> invokeSubmitFeedResponse =  invokeSubmitFeed(service, request);
 
         //Does some retry logic to handle throttling or server errors
         if (invokeSubmitFeedResponse.isError()) {
@@ -151,9 +152,9 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @return Response: A Response is one of SubmitFeedSuccessAMZ or ErrorHandlerAMZ.
      */
     //TODO: Instead of printing need to log
-    private Response<SubmitFeedSucessAMZ, ErrorHandlerAMZ> invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
+    private Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
         //HashMap<String, Object> responseResult = new HashMap<>();
-        SubmitFeedSucessAMZ submitFeedSuccess = new SubmitFeedSucessAMZ();
+        SubmitFeedSuccessAMZ submitFeedSuccess = new SubmitFeedSuccessAMZ();
 
         try {
             SubmitFeedResponse response = service.submitFeedFromFile(request);
