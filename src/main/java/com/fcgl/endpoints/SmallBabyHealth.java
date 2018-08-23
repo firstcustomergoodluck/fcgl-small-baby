@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.ResponseEntity;
 
-//Produces a simple endpoint to check that the server is alive
 
+/**
+ * Produces a simple endpoint to check that the server is alive
+ */
 @RestController
 public class SmallBabyHealth {
 
