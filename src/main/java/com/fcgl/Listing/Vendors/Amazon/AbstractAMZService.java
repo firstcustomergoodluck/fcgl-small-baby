@@ -7,13 +7,13 @@ import com.amazonaws.mws.MarketplaceWebServiceConfig;
 /**
  * Abstract class for Amazon Listing API
  */
-abstract class AbstractAMZService {
+public abstract class AbstractAMZService {
 
     /**
      * Instantiates the connection with Amazon Marketplace Web Services
      * @return Http Client Implementation of MWS
      */
-    MarketplaceWebService instantiateService() {
+    public MarketplaceWebService instantiateService() {
         final String SecretKey = "";
         final String appName = "fcgl";
         final String appVersion = "1.0";

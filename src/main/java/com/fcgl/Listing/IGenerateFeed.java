@@ -1,9 +1,12 @@
 package com.fcgl.Listing;
 
+import com.fcgl.Listing.Vendors.Amazon.ErrorHandlerAMZ;
+import com.fcgl.Listing.Vendors.Amazon.SubmitFeed.SubmitFeedSucessAMZ;
+
 import java.util.HashMap;
 
 public interface IGenerateFeed {
 
-    HashMap<String, Object> generateFeed() throws InterruptedException;
+    Response generateFeed() throws InterruptedException;
 
 }
