@@ -3,14 +3,14 @@ package com.fcgl.Listing.Vendors.Amazon.SubmitFeed;
 import com.fcgl.Listing.ISuccessHandler;
 
 //TODO: Would it be good to save this in our database for our record?
-public class SubmitFeedSucessAMZ implements ISuccessHandler {
+public class SubmitFeedSuccessAMZ implements ISuccessHandler {
     private String submissionId;
     private String processingStatus;
     private int statusCode;
     private String timestamp;
     private String requestId;
 
-    public SubmitFeedSucessAMZ() {
+    public SubmitFeedSuccessAMZ() {
 
     }
 
