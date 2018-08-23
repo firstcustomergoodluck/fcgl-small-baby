@@ -20,6 +20,8 @@ import com.fcgl.Listing.Response;
 import com.fcgl.Listing.Vendors.*;
 import com.fcgl.Listing.Vendors.Amazon.AbstractAMZService;
 import com.fcgl.Listing.Vendors.Amazon.ErrorHandlerAMZ;
+import com.fcgl.Listing.Vendors.Amazon.XML_Files.IXMLGenerator;
+import com.fcgl.Listing.Vendors.Amazon.XML_Files.XMLGeneratorAMZ;
 
 //TODO: Need to add a log under every error
 //TODO: Need to add a log after a successful API call
@@ -84,13 +86,12 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
 
     /**
      * Generates an XML file with the product information passed into this method.
-     * @param productInformation: The product data returned from the message queue
-     * @return the full path of the location of the xml file that was generated.
+     * @param productInformation: The product data returned from the message queue.
+     * @return the full path of the location of the XML file that was generated.
      */
     private String generateProductXML(ArrayList<ArrayList<ProductInformation>> productInformation) {
-        //TODO: Look for some good third parties that can make big XML files efficiently.
-        //Could use JAXP: https://stackoverflow.com/questions/8865099/xml-file-generator-in-java
-        return "";
+        IXMLGenerator productXML = new XMLGeneratorAMZ();
+        return productXML.generateProductXML(productInformation);
     }
 
     /**
