@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SubmitListing {
-    
+
     //TODO: This should probably call a factory to generate a listing in a particular Vendor
     //TODO: Should we submit a feed in multiple places?
     //TODO: Should we submit different feeds on different sites?
