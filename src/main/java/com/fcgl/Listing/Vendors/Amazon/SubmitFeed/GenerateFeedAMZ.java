@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 //FCGL Imports
 import com.fcgl.Exceptions.RetryLimitException;
-import com.fcgl.Listing.IGenerateFeed;
-import com.fcgl.Listing.Response;
+import com.fcgl.Listing.Vendors.IGenerateFeed;
+import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.*;
 import com.fcgl.Listing.Vendors.Amazon.AbstractAMZService;
 import com.fcgl.Listing.Vendors.Amazon.ErrorHandlerAMZ;
@@ -81,6 +81,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @return the product data
      */
     private ArrayList<ArrayList<ProductInformation>> dequeu() {
+        //TODO Call deque method... Need to design this;
         return new ArrayList<>();
     }
 

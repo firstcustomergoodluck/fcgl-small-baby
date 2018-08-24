@@ -1,4 +1,7 @@
-package com.fcgl.Listing;
+package com.fcgl.Listing.Response;
+
+import com.fcgl.Listing.Response.ErrorHandler.IErrorHandler;
+import com.fcgl.Listing.Response.SuccessHandler.ISuccessHandler;
 
 /**
  * Basic format for what should be returned to an endpoint

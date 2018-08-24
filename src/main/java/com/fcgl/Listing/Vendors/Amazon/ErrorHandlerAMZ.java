@@ -1,6 +1,6 @@
 package com.fcgl.Listing.Vendors.Amazon;
 
-import com.fcgl.Listing.ErrorHandler;
+import com.fcgl.Listing.Response.ErrorHandler.ErrorHandler;
 
 public class ErrorHandlerAMZ extends ErrorHandler {
     private final String ERROR_MESSAGE = "ErrorHandlerAMZ has an empty %s";

@@ -1,11 +1,14 @@
-package com.fcgl.Listing;
+package com.fcgl.Listing.Response;
+
+import com.fcgl.Listing.Response.ErrorHandler.IErrorHandler;
+import com.fcgl.Listing.Response.SuccessHandler.ISuccessHandler;
 
 /**
  * Generic Response that each class should return.
  * @param <SUCCESSHANDLER> An Object that implements ISuccessHandler
  * @param <ERRORHANDLER> An Object that implements IErrorHandler
  */
-public class Response<SUCCESSHANDLER extends ISuccessHandler, ERRORHANDLER extends IErrorHandler> implements IResponse{
+public class Response<SUCCESSHANDLER extends ISuccessHandler, ERRORHANDLER extends IErrorHandler> implements IResponse {
     private boolean error;
     private ERRORHANDLER errorHandler;
     private SUCCESSHANDLER successHandler;
@@ -40,9 +43,7 @@ public class Response<SUCCESSHANDLER extends ISuccessHandler, ERRORHANDLER exten
 }
 
 
-//package com.fcgl.Listing.Vendors;
-//
-//import com.fcgl.Listing.IErrorHandler;
+
 //
 //public class Response {
 //    private boolean error;

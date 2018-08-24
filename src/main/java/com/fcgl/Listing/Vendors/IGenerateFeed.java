@@ -1,4 +1,6 @@
-package com.fcgl.Listing;
+package com.fcgl.Listing.Vendors;
+
+import com.fcgl.Listing.Response.Response;
 
 /**
  * Interface for Generating a Feed on an e-commerce site.

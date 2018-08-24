@@ -1,4 +1,4 @@
-package com.fcgl.Listing;
+package com.fcgl.Listing.Response.SuccessHandler;
 
 
 public interface ISuccessHandler {

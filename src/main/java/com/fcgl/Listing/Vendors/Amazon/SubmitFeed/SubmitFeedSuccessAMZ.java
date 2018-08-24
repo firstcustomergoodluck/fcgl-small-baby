@@ -1,6 +1,6 @@
 package com.fcgl.Listing.Vendors.Amazon.SubmitFeed;
 
-import com.fcgl.Listing.ISuccessHandler;
+import com.fcgl.Listing.Response.SuccessHandler.ISuccessHandler;
 
 //TODO: Would it be good to save this in our database for our record?
 

@@ -1,4 +1,4 @@
-package com.fcgl.Listing;
+package com.fcgl.Listing.Response.ErrorHandler;
 
 /**
  * Basic format for what should be returned when there is an Error.
