@@ -18,7 +18,7 @@ public class Response implements IResponse {
      * @param statusCode: Status code
      */
     public Response(boolean error, int statusCode, String requestId, String message) {
-        isBadConstructor(message, requestId);
+        validateConstructor(message, requestId);
         this.error = error;
         this.message = message;
         this.statusCode = statusCode;
@@ -46,10 +46,9 @@ public class Response implements IResponse {
      * @param message: message passed into the constructor
      * @param requestId requestId passed into the constructor
      */
-    private void isBadConstructor(String message, String requestId) {
-        isBadString(message, "Message");
-        isBadString(requestId, "Request ID");
-
+    private void validateConstructor(String message, String requestId) {
+        validateString(message, "Message");
+        validateString(requestId, "Request ID");
     }
 
     /**
@@ -57,7 +56,7 @@ public class Response implements IResponse {
      * @param value: the String being evaluated
      * @param variable: the name of the variable. Used for error messaging.
      */
-    private void isBadString(String value, String variable) {
+    private void validateString(String value, String variable) {
         if (value == null || value.length() == 0) {
             throw new NullPointerException(String.format(ERROR_MESSAGE, variable));
         }
