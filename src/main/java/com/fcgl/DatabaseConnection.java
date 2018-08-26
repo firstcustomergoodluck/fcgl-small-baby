@@ -3,6 +3,9 @@ package com.fcgl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * Template for connecting our database
+ */
 public class DatabaseConnection {
 
     //TODO: This has to return a connection so that someone can access the DB.
