@@ -1,80 +1,65 @@
 package com.fcgl.Listing.Response;
 
-import com.fcgl.Listing.Response.ErrorHandler.IErrorHandler;
-import com.fcgl.Listing.Response.SuccessHandler.ISuccessHandler;
-
 /**
- * Generic Response that each class should return.
- * @param <SUCCESSHANDLER> An Object that implements ISuccessHandler
- * @param <ERRORHANDLER> An Object that implements IErrorHandler
+ * Response that each class should return.
  */
-public class Response<SUCCESSHANDLER extends ISuccessHandler, ERRORHANDLER extends IErrorHandler> implements IResponse {
+public class Response implements IResponse {
+    private final String ERROR_MESSAGE = "ErrorHandler has an empty %s";
     private boolean error;
-    private ERRORHANDLER errorHandler;
-    private SUCCESSHANDLER successHandler;
+    private int statusCode;
+    private String message;
+    private String requestId;
 
-    public Response(SUCCESSHANDLER successHandler) {
-        this.successHandler = successHandler;
-        this.error = false;
-    }
-
-    public Response(ERRORHANDLER errorHandler) {
-        this.errorHandler = errorHandler;
-        this.error = true;
+    /**
+     *
+     * @param error: Indicates if there was an error
+     * @param message: Descriptive message of response
+     * @param requestId: requestId
+     * @param statusCode: Status code
+     */
+    public Response(boolean error, int statusCode, String requestId, String message) {
+        isBadConstructor(message, requestId);
+        this.error = error;
+        this.message = message;
+        this.statusCode = statusCode;
+        this.requestId = requestId;
     }
 
     public boolean isError() {
         return error;
     }
 
-    public ERRORHANDLER getErrorHandler() {
-        if (this.error) {
-            return errorHandler;
+    public String getMessage() {
+        return message;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * Validates that a constructor has valid values.
+     * @param message: message passed into the constructor
+     * @param requestId requestId passed into the constructor
+     */
+    private void isBadConstructor(String message, String requestId) {
+        isBadString(message, "Message");
+        isBadString(requestId, "Request ID");
+
+    }
+
+    /**
+     * Validates if a String is correctly passed in.
+     * @param value: the String being evaluated
+     * @param variable: the name of the variable. Used for error messaging.
+     */
+    private void isBadString(String value, String variable) {
+        if (value == null || value.length() == 0) {
+            throw new NullPointerException(String.format(ERROR_MESSAGE, variable));
         }
-        throw new RuntimeException("Cannot get Error Handler if Response was instantiated with an Success Handler");
     }
-
-    public SUCCESSHANDLER getSuccessHandler() {
-        if (!this.error)
-            return successHandler;
-        throw new RuntimeException("Cannot get Success Handler if Response was instantiated with an Error Handler");
-    }
-
 }
-
-
-
-//
-//public class Response {
-//    private boolean error;
-//    private IErrorHandler errorHandler;
-//    private ISuccessHandler successHandler;
-//
-//    public Response(ISuccessHandler successHandler) {
-//        this.successHandler = successHandler;
-//        this.error = false;
-//    }
-//
-//    public Response(IErrorHandler errorHandler) {
-//        this.errorHandler = errorHandler;
-//        this.error = true;
-//    }
-//
-//    public boolean isError() {
-//        return error;
-//    }
-//
-//    public IErrorHandler getErrorHandler() {
-//        if (this.error) {
-//            return errorHandler;
-//        }
-//        throw new RuntimeException("Cannot get Error Handler if Response was instantiated with an Success Handler");
-//    }
-//
-//    public ISuccessHandler getSuccessHandler() {
-//        if (!this.error)
-//            return successHandler;
-//        throw new RuntimeException("Cannot get Success Handler if Response was instantiated with an Error Handler");
-//    }
-//
-//}

@@ -19,7 +19,6 @@ import com.fcgl.Listing.Vendors.IGenerateFeed;
 import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.*;
 import com.fcgl.Listing.Vendors.Amazon.AbstractAMZService;
-import com.fcgl.Listing.Vendors.Amazon.ErrorHandlerAMZ;
 import com.fcgl.Listing.Vendors.Amazon.XML_Files.IXMLGenerator;
 import com.fcgl.Listing.Vendors.Amazon.XML_Files.XMLGeneratorAMZ;
 
@@ -58,7 +57,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @return Response returned by Amazon Marketplace Web Services
      * @throws InterruptedException: Thread interruption
      */
-    public Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> generateFeed() throws InterruptedException {
+    public Response generateFeed() throws InterruptedException {
         MarketplaceWebService service = instantiateService();// Instantiates MWS service
 
         ArrayList<ArrayList<ProductInformation>> productInformation = dequeu();//Gets product data from message queue
@@ -70,8 +69,8 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
         } catch (RetryLimitException e) {
             String message =  e.getMessage();
             int statusCode = 500;
-            ErrorHandlerAMZ errorHandlerAMZ = new ErrorHandlerAMZ(message, getRequestId(), statusCode);
-            return new Response<>(errorHandlerAMZ);
+            return new Response(true, statusCode, getRequestId(), message);
+
         }
     }
 
@@ -106,7 +105,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @throws RetryLimitException: Will be thrown when the retry limit is reached
      * @throws InterruptedException: Thread error
      */
-    private Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> submitFeed(String fileLocation, MarketplaceWebService service, int retryAttempt) throws RetryLimitException, InterruptedException {
+    private Response submitFeed(String fileLocation, MarketplaceWebService service, int retryAttempt) throws RetryLimitException, InterruptedException {
         IdList marketplaces = new IdList(Arrays.asList(marketplaceId));
         SubmitFeedRequest request = new SubmitFeedRequest();
         request.setMerchant(merchantId);
@@ -121,19 +120,19 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
             String message = String.format("The file: %s was not found, try regenerating the file", fileLocation);
             int statusCode = 404;
 
-            return new Response<>( new ErrorHandlerAMZ(message, requestId, statusCode));
+            return new Response(true, statusCode, getRequestId(), message);
         }
 
-        Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> invokeSubmitFeedResponse =  invokeSubmitFeed(service, request);
+        Response invokeSubmitFeedResponse =  invokeSubmitFeed(service, request);
 
         //Does some retry logic to handle throttling or server errors
         if (invokeSubmitFeedResponse.isError()) {
-            ErrorHandlerAMZ errorHandlerAMZ = invokeSubmitFeedResponse.getErrorHandler();
+            int statusCode = invokeSubmitFeedResponse.getStatusCode();
             if (retryAttempt > 4) {
                 throw new RetryLimitException("Retry Attempts Exceeded for submitFeed()");
             }
 
-            if (errorHandlerAMZ.getStatusCode() >= 500) {
+            if (statusCode >= 500) {
                 Thread.sleep(retryWaitTime[retryAttempt]);
                 submitFeed(fileLocation, service, retryAttempt++);
             }
@@ -154,11 +153,17 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
      * @return Response: A Response is one of SubmitFeedSuccessAMZ or ErrorHandlerAMZ.
      */
     //TODO: Instead of printing need to log
-    private Response<SubmitFeedSuccessAMZ, ErrorHandlerAMZ> invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
+    private Response invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
         //HashMap<String, Object> responseResult = new HashMap<>();
-        SubmitFeedSuccessAMZ submitFeedSuccess = new SubmitFeedSuccessAMZ();
+        //SubmitFeedSuccessAMZ submitFeedSuccess = new SubmitFeedSuccessAMZ();
 
         try {
+            String amzFeedSubmissionid = "";
+            String amzProcessingStatus = "";
+            String timestamp = "";
+            String amzRequestId = "";
+            int statusCode;
+
             SubmitFeedResponse response = service.submitFeedFromFile(request);
             System.out.println("SubmitFeed Header");
             System.out.println("SubmitFeed Action Response");
@@ -184,7 +189,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
                         System.out.print("                    "
                                 + feedSubmissionInfo.getFeedSubmissionId());
                         System.out.println();
-                        submitFeedSuccess.setSubmissionId(feedSubmissionInfo.getFeedSubmissionId());
+                        amzFeedSubmissionid = feedSubmissionInfo.getFeedSubmissionId();
                     }
                     if (feedSubmissionInfo.isSetFeedType()) {
                         System.out.print("                FeedType");
@@ -207,7 +212,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
                         System.out.print("                    "
                                 + feedSubmissionInfo.getFeedProcessingStatus());
                         System.out.println();
-                        submitFeedSuccess.setProcessingStatus(feedSubmissionInfo.getFeedSubmissionId());
+                        amzProcessingStatus = feedSubmissionInfo.getFeedSubmissionId();
                     }
                     if (feedSubmissionInfo.isSetStartedProcessingDate()) {
                         System.out
@@ -241,22 +246,32 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
                     System.out.print("                "
                             + responseMetadata.getRequestId());
                     System.out.println();
-                    submitFeedSuccess.setRequestId(responseMetadata.getRequestId());
+                    amzRequestId = responseMetadata.getRequestId();
                 }
             }
             System.out.println(response.getResponseHeaderMetadata());//Has some useful stuff in here that maybe I want??? I should defintly log the timestamp
             System.out.println();
             System.out.println();
-            submitFeedSuccess.setTimestamp(response.getResponseHeaderMetadata().getTimestamp());
-            submitFeedSuccess.setStatusCode(200);
-            return new Response<>(submitFeedSuccess);
+            //submitFeedSuccess.setTimestamp();
+            //submitFeedSuccess.setStatusCode(200);
+            timestamp = response.getResponseHeaderMetadata().getTimestamp();
+            statusCode = 200;
+
+            String message = String.format("SubmitFeed Request Success:" +
+                            " Status Code: %d," +
+                            " AMZRequestId: %s," +
+                            " Feed Submission Id: %s," +
+                            " Processing Status: %s," +
+                            " timestamp: %s", statusCode, amzRequestId, amzFeedSubmissionid, amzProcessingStatus, timestamp);
+
+            return new Response(false, statusCode, getRequestId(), message);
 
         } catch (MarketplaceWebServiceException ex) {
             String message = ex.getMessage();
             int statusCode = ex.getStatusCode();
-            String errorCode = ex.getErrorCode();
-            String errorType = ex.getErrorType();
-            String requestIdAMZ = ex.getRequestId();
+            String amzErrorCode = ex.getErrorCode();
+            String amzErrorType = ex.getErrorType();
+            String amzRequestId = ex.getRequestId();
             String timestamp = ex.getResponseHeaderMetadata().getTimestamp();
             System.out.println("Caught Exception: " + message);
             System.out.println("Response Status Code: " + ex.getStatusCode());
@@ -266,12 +281,8 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
             System.out.print("XML: " + ex.getXML());
             System.out.println("ResponseHeaderMetadata: " + ex.getResponseHeaderMetadata());
 
-            ErrorHandlerAMZ errorHandlerAMZ = new ErrorHandlerAMZ(message, this.getRequestId(), statusCode);
-            errorHandlerAMZ.setErrorCode(errorCode);
-            errorHandlerAMZ.setErrorType(errorType);
-            errorHandlerAMZ.setRequestIdAMZ(requestIdAMZ);
-            errorHandlerAMZ.setTimestamp(timestamp);
-            return new Response<>(errorHandlerAMZ);
+            return new Response(true, statusCode, getRequestId(), message);
+
         }
     }
 
