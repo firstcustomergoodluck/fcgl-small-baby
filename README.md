@@ -26,7 +26,7 @@ Read the gradle docs for more information
   - PR title: TEST-123 Updated README
   - Branch: git checkout -b TEST-123_updatingReadMe
 
-##Database Set Up
+## Database Set Up
 * Install mysql on local machine
     * Mac: ```$ brew install mysql```
     * //TODO: Insert Link
@@ -45,12 +45,12 @@ Read the gradle docs for more information
 * You can now log into mysql:
 ```$ mysql -u fcgl-user -p```
 
-##Dev Set Up
+## Dev Set Up
 
 **Start up:**
 1. Clone this repo
 
-####Run as an app
+#### Run as an app
 1. ./gradlew build
 2. java -jar {jar_file.jar} ```Example: java -jar build/libs/fcgl-small-baby-0.0.1-SNAPSHOT.jar``` 
 
@@ -70,9 +70,45 @@ and the following body format:
 //TODO Insert JSon:
 
 
+# RabbitMQ Set Up
 
+### MacOS:
 
+##### Prerequisites:
+* Install homebrew: https://brew.sh/
 
+##### Installation: 
+* Type the following commands in your terminal: 
+   * ``` $ brew update```
+   *  ```$ brew install rabbitmq```
 
+##### Run RabbitMQ Server:
 
+The RabbitMQ server scripts are installed into /usr/local/sbin.
+* Add ```/usr/local/sbin``` to your ```.bash_profile``` or ```.profile```
+    *  ``` $ export PATH=$PATH:/usr/local/sbin```
+    
+* Start Server
+    * ```$ rabbitmq-server``` or ```brew services start rabbitmq```
+     
+     
+##### Management Plugin:
 
+"The rabbitmq-management plugin provides an HTTP-based API for management
+ and monitoring of your RabbitMQ server, along with a browser-based UI
+  and a command line tool, rabbitmqadmin."... Features can be read here: 
+  https://www.rabbitmq.com/management.html
+  
+* Run the following command if  not yet enabled: ```$ rabbitmq-plugins enable rabbitmq_management```  
+* Port: 
+    * ```http://localhost:15672/```
+    * username: ```guest```
+    * password: ```guest```
+    
+*By default, these credentials can only be used when connecting to the broker as localhost*
+
+ 
+##### Possible Errors:
+
+ * Permission Error:
+    * Contact ```fcgl-support```

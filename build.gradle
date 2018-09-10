@@ -62,6 +62,8 @@ dependencies {
 
     compile name: 'MaWSJavaClientLibrary-1.1'//MWS Library
 
+    implementation "org.springframework.boot:spring-boot-starter-amqp"
+
     //implementation 'org.flywaydb:flyway-core:5.1.4'//Useful for migrations
 }
 
