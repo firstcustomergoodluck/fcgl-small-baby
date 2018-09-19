@@ -35,6 +35,10 @@ dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    implementation ('org.springframework.boot:spring-boot-starter-log4j2')
+
+
+
     jooqRuntime 'mysql:mysql-connector-java:8.0.12'
     implementation 'mysql:mysql-connector-java:8.0.12'
 
@@ -75,8 +79,8 @@ jooq {
             //driver = 'com.mysql.cj.jdbc.Driver'
             driver = 'com.mysql.jdbc.Driver'
             url = 'jdbc:mysql://localhost:3306/?useSSL=false&serverTimezone=UTC'//change to true for production
-            user = 'fcgl-user'//Change to your user
-            password = 'password'//Change to your password
+            user = 'root'//Change to your user
+            password = ''//Change to your password
             schema = 'fcgl_local'
 
         }
@@ -89,5 +93,3 @@ jooq {
         }
     }
 }
-
-
