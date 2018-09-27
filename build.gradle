@@ -30,7 +30,9 @@ repositories {
         dirs 'amazon-mws-v20090101-java-2016-09-21._CB476815245_/dist'
     }
 }
-
+configurations.implementation {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -46,6 +48,12 @@ dependencies {
     implementation 'org.jooq:jooq-codegen:+'
     implementation 'org.jooq:jooq-codegen-maven:+'
 
+    implementation 'org.apache.httpcomponents:httpclient:4.5.6'//Helps with http requests
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation name: 'MaWSJavaClientLibrary-1.1'//MWS Library
+
+    // Testing Framework
     // Use JUnit 5 test framework
     testImplementation(
             'org.junit.jupiter:junit-jupiter-api:5.1.0'
@@ -56,11 +64,9 @@ dependencies {
     // Mockito
     testImplementation "org.mockito:mockito-core:2.21.0"
 
-    implementation 'org.apache.httpcomponents:httpclient:4.5.6'//Helps with http requests
-
-    implementation 'com.google.code.gson:gson:2.8.5'
-
-    compile name: 'MaWSJavaClientLibrary-1.1'//MWS Library
+    //Logging
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2:2.0.5.RELEASE'
 
     //implementation 'org.flywaydb:flyway-core:5.1.4'//Useful for migrations
 }
@@ -75,8 +81,8 @@ jooq {
             //driver = 'com.mysql.cj.jdbc.Driver'
             driver = 'com.mysql.jdbc.Driver'
             url = 'jdbc:mysql://localhost:3306/?useSSL=false&serverTimezone=UTC'//change to true for production
-            user = 'fcgl-user'//Change to your user
-            password = 'password'//Change to your password
+            user = 'user'//Change to your user
+            password = 'pass'//Change to your password
             schema = 'fcgl_local'
 
         }
@@ -89,5 +95,3 @@ jooq {
         }
     }
 }
-
-
