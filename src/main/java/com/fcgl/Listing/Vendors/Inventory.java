@@ -2,8 +2,8 @@ package com.fcgl.Listing.Vendors;
 
 public class Inventory {
 
-  int quantity;
-  int fulfillLatency;
+  private int quantity;
+  private int fulfillLatency;
   public Inventory(int quantity, int fulfillLatency) {
     this.quantity = quantity;
     this.fulfillLatency = fulfillLatency;
