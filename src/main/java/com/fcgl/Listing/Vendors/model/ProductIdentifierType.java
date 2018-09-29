@@ -1,5 +1,8 @@
-package com.fcgl.Listing.Vendors;
+package com.fcgl.Listing.Vendors.model;
 
+/**
+ * Order by alphabetical when add new enum.
+ */
 public enum ProductIdentifierType {
   ISBN("ISBN");
 
