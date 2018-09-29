@@ -1,4 +1,4 @@
-package com.fcgl.Listing.Vendors;
+package com.fcgl.Listing.Vendors.model;
 
 
 import java.util.Objects;

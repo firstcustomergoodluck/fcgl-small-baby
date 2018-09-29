@@ -1,8 +1,8 @@
-package com.fcgl.Listing.Vendors;
+package com.fcgl.Listing.Vendors.model;
 
 import java.util.Objects;
 
-public class AmazonProduct {
+public class AmazonProduct implements IProductInformation<Inventory, Product, Price> {
 
   private String SKU;
   private Inventory inventory;
@@ -20,18 +20,22 @@ public class AmazonProduct {
     this.inventory = inventory;
   }
 
+  @Override
   public String getSKU() {
     return this.SKU;
   }
 
+  @Override
   public Inventory getInventory() {
     return this.inventory;
   }
 
+  @Override
   public Product getProduct() {
     return this.product;
   }
 
+  @Override
   public Price getPrice() {
     return this.price;
   }
