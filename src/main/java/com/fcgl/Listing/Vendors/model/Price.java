@@ -1,5 +1,6 @@
-package com.fcgl.Listing.Vendors;
+package com.fcgl.Listing.Vendors.model;
 
+import com.fcgl.Listing.Vendors.model.Currency;
 import java.util.Objects;
 
 public class Price {

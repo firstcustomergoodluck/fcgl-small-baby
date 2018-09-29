@@ -1,5 +1,8 @@
-package com.fcgl.Listing.Vendors;
+package com.fcgl.Listing.Vendors.model;
 
+/**
+ * Order by alphabetical.
+ */
 public enum Currency {
   USD("USD");
 
