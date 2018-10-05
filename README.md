@@ -38,7 +38,7 @@ Read the gradle docs for more information
 
 * TODO: How to get the database schema on a developers machine?
 
-* Create a user: ```mysql> CREATE USER 'fcgl_user'@'localhost' indentified by 'password'```
+* Create a user: ```mysql> CREATE USER 'fcgl-user'@'localhost' indentified by 'password'```
 
 * Give user privileges ```mysql> GRANT ALL PRIVILEGES ON fcgl_local.* to 'fcgl_user'@'localhost'; ```
 
@@ -112,3 +112,8 @@ The RabbitMQ server scripts are installed into /usr/local/sbin.
 
  * Permission Error:
     * Contact ```fcgl-support```
+    
+##### Helpful Commands: 
+* To see what queues RabbitMQ has and how many messages are in them
+    * ```$ sudo rabbitmqctl list_queues```
+

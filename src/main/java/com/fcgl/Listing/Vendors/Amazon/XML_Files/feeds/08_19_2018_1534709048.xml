@@ -16,27 +16,10 @@
                 <Type>ISBN</Type>
                 <Value>9781133274537</Value>
             </StandardProductID>
-            <ProductTaxCode>A_BOOKS_GEN</ProductTaxCode>
             <DescriptionData>
                 <Title>Statistics for Business and Economics</Title>
                 <Description>This is an example product description.</Description>
-                <BulletPoint>Example Bullet Point 1</BulletPoint>
-                <BulletPoint>Example Bullet Point 2</BulletPoint>
-                <MSRP currency="USD">25.19</MSRP>
-                <Manufacturer>Example Product Manufacturer</Manufacturer>
-                <ItemType>Textbook</ItemType>
             </DescriptionData>
-            <ProductData>
-                <Books>
-                    <ProductType>
-                        <BooksMisc>
-                            <Author>Anderson</Author>
-                            <Binding>Textbook</Binding>
-                            <Edition>12e</Edition>
-                        </BooksMisc>
-                    </ProductType>
-                </Books>
-            </ProductData>
         </Product>
     </Message>
 </AmazonEnvelope>
