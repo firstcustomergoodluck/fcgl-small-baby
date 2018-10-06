@@ -1,4 +1,4 @@
-package com.fcgl.Listing.MessageQueueReceiveListing;
+package com.fcgl.Listing.MessageQueueReceiveListing.Response;
 
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;

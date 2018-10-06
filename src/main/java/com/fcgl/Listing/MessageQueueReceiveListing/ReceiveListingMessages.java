@@ -1,19 +1,17 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.*;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.AMQP.Queue.DeclareOk;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * ReceiveListingMessages: This class receives messages from RabbitMQ and processes them.

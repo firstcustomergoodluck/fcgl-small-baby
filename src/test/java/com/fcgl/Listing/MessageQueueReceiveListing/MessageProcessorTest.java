@@ -1,5 +1,7 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageToProductInformationResponse;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +29,8 @@ class MessageProcessorTest {
         String message1 = generateJsonFormattedMessage(values, parameters);
         messages.add(message1);
         MessageProcessor messageProcessor = new MessageProcessor(messages);
-        MessageProcessor.MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
-        assertEquals(MessageProcessor.State.INSERT, response.getState());
+        MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
+        assertEquals(State.INSERT, response.getState());
         assertEquals(Vendor.AMAZON, response.getVendor());
         assertEquals("1_1", response.getVendorSKUId());
         IProductInformation productInformation = response.getProductInformation();
@@ -54,8 +56,8 @@ class MessageProcessorTest {
         String message1 = generateJsonFormattedMessage(values, parameters);
         messages.add(message1);
         MessageProcessor messageProcessor = new MessageProcessor(messages);
-        MessageProcessor.MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
-        assertEquals(MessageProcessor.State.ERROR, response.getState());
+        MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
+        assertEquals(State.ERROR, response.getState());
     }
 
     @Test
@@ -64,15 +66,15 @@ class MessageProcessorTest {
         String message1 = generateJsonFormattedMessage(values, parameters);
         messages.add(message1);
         MessageProcessor messageProcessor = new MessageProcessor(messages);
-        MessageProcessor.MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
+        MessageToProductInformationResponse response = messageProcessor.messageToProductInformation(message1);
         String vendorSKUId = response.getVendorSKUId();
         Vendor vendor = response.getVendor();
         ArrayList<IProductInformation> productInformationList = new ArrayList<>();
         productInformationList.add(response.getProductInformation());
         messageProcessor.getVendorProductInformation().put(vendor, productInformationList);
         messageProcessor.getVendorSKUIndexLocation().put(vendorSKUId, 0);
-        MessageProcessor.MessageToProductInformationResponse response2 = messageProcessor.messageToProductInformation(message1);
-        assertEquals(response2.getState(), MessageProcessor.State.UPDATE);
+        MessageToProductInformationResponse response2 = messageProcessor.messageToProductInformation(message1);
+        assertEquals(response2.getState(), State.UPDATE);
         assertEquals(response2.getQuantity(), new Integer(1));
     }
 

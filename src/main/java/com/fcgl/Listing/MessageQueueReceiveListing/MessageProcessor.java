@@ -1,19 +1,18 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageToProductInformationResponse;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.*;
 import com.fcgl.Listing.Vendors.model.Currency;
 import com.google.gson.Gson;
 
-import javax.validation.constraints.Null;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * Processes Messages and maps them to IProductInformation objects
+ * Processes Messages (Strings) and maps them to IProductInformation objects
  */
-public class MessageProcessor {
+public class MessageProcessor implements IMessageProcessor{
     private List<String> messages;
     private HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = new HashMap<>();
     private HashMap<String, Integer> vendorSKUIndexLocation = new HashMap<>();
@@ -28,18 +27,6 @@ public class MessageProcessor {
      */
     public MessageProcessor(List<String> messages) {
         this.messages = messages;
-    }
-
-    public HashMap<String, Integer> getVendorSKUIndexLocation() {
-        return vendorSKUIndexLocation;
-    }
-
-    public HashMap<Vendor, ArrayList<IProductInformation>> getVendorProductInformation() {
-        return vendorProductInformation;
-    }
-
-    public List<String> getBadRequests() {
-        return badRequests;
     }
 
     /**
@@ -74,10 +61,10 @@ public class MessageProcessor {
 
     /**
      * Extracts data from a String and uses that data to create a ProductInformation Object
-     * @param message: Message received from the message queue
+     * @param message: Json formatted String
      * @return The IProductInformation Object that it generated from the message.
      */
-    MessageToProductInformationResponse messageToProductInformation(String message) throws NullPointerException {
+    public MessageToProductInformationResponse messageToProductInformation(String message) throws NullPointerException {
 
         HashMap result = new Gson().fromJson(message, HashMap.class);
 
@@ -163,66 +150,16 @@ public class MessageProcessor {
         }
     }
 
-    /**
-     * Response for messageToProductInformation method.
-     */
-    public class MessageToProductInformationResponse {
-
-        private IProductInformation productInformation;
-        private Vendor vendor;
-        private String vendorSKUId;
-        private State state;
-        private Integer quantity;
-
-        private MessageToProductInformationResponse(State state) {
-            Objects.requireNonNull(state);
-            this.state = state;
-        }
-
-        private MessageToProductInformationResponse(IProductInformation productInformation, Vendor vendor, String vendorSKUId, Integer quantity) {
-            Objects.requireNonNull(productInformation);
-            Objects.requireNonNull(vendor);
-            Objects.requireNonNull(vendorSKUId);
-            Objects.requireNonNull(quantity);
-            this.productInformation = productInformation;
-            this.vendor = vendor;
-            this.quantity = quantity;
-            this.state = State.UPDATE;
-        }
-
-        private MessageToProductInformationResponse(IProductInformation productInformation, Vendor vendor, String vendorSKUId, State state) {
-            Objects.requireNonNull(productInformation);
-            Objects.requireNonNull(vendor);
-            Objects.requireNonNull(vendorSKUId);
-            Objects.requireNonNull(state);
-            this.productInformation = productInformation;
-            this.vendor = vendor;
-            this.vendorSKUId = vendorSKUId;
-            this.state = state;
-        }
-
-        public IProductInformation getProductInformation() {
-            return productInformation;
-        }
-
-        public Vendor getVendor() {
-            return vendor;
-        }
-
-        public String getVendorSKUId() {
-            return vendorSKUId;
-        }
-
-        public State getState() {
-            return state;
-        }
-
-        public Integer getQuantity() {
-            return quantity;
-        }
+    public HashMap<String, Integer> getVendorSKUIndexLocation() {
+        return vendorSKUIndexLocation;
     }
 
-    public enum State {
-        INSERT, UPDATE, ERROR
+    public HashMap<Vendor, ArrayList<IProductInformation>> getVendorProductInformation() {
+        return vendorProductInformation;
     }
+
+    public List<String> getBadRequests() {
+        return badRequests;
+    }
+
 }
