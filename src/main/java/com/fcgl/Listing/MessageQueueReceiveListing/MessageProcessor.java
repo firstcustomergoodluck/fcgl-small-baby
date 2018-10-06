@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Processes Messages (Strings) and maps them to IProductInformation objects
  */
-public class MessageProcessor implements IMessageProcessor{
+public class MessageProcessor implements IMessageProcessor {
     private List<String> messages;
     private HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = new HashMap<>();
     private HashMap<String, Integer> vendorSKUIndexLocation = new HashMap<>();
@@ -31,7 +31,7 @@ public class MessageProcessor implements IMessageProcessor{
 
     /**
      * Processes the List of messages passed in the constructor.
-     * @return MessageProcessorResponse: List of good requests, bad requests, and requests that need to be requeued
+     * @return MessageProcessorResponse: List of good requests, and bad requests
      */
     public MessageProcessorResponse processMessages() {
         for (String message : messages) {

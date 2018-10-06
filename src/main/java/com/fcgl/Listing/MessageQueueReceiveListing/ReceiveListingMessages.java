@@ -3,6 +3,7 @@ package com.fcgl.Listing.MessageQueueReceiveListing;
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.*;
+import com.fcgl.MessageQueue.IMessageQueueReceiver;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.GetResponse;
@@ -17,8 +18,7 @@ import java.util.HashMap;
  * ReceiveListingMessages: This class receives messages from RabbitMQ and processes them.
  * Retry logic is implemented in methods that throw IOExceptions
  */
-
-public class ReceiveListingMessages {
+public class ReceiveListingMessages implements IMessageQueueReceiver {
     //TODO: Should get queueNames from database
     private static final Integer MAX_RETRY = 3;
     private static final String[] queueNames = {"listing"};
