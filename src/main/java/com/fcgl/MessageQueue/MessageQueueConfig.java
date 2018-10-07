@@ -7,18 +7,19 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-//TODO: Where should we instantiate the queue names???
-//TODO: Requirements.... When a queue is too big we want to move some messages to another queue
+/**
+ * Initialized a Connection and Channel for RabbitMQ
+ */
 public class MessageQueueConfig {
 
     private Connection connection;
     private Channel channel;
+    private Boolean isSuccessfulConnection = false;
 
-    public MessageQueueConfig() throws IOException, TimeoutException {
+    public MessageQueueConfig() {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-        connection = factory.newConnection();
-        channel = connection.createChannel();
+        setChannelConnection(factory);
     }
 
     public Channel getChannel() {
@@ -29,9 +30,34 @@ public class MessageQueueConfig {
         return connection;
     }
 
+    public Boolean getIsSuccessfulConnection() {
+        return isSuccessfulConnection;
+    }
+
     public void closeConnection() throws IOException, TimeoutException {
         channel.close();
         connection.close();
+    }
+
+    private void setChannelConnection(ConnectionFactory factory) {
+        try {
+            connection = factory.newConnection();
+        } catch (Exception e) {
+            //TODO: Log this
+            connection = null;
+            channel = null;
+            return;
+        }
+
+        try {
+            channel = connection.createChannel();
+        } catch (IOException e) {
+            //TODO: Log this
+            connection = null;
+            channel = null;
+        }
+
+        isSuccessfulConnection = true;
     }
 
 }

@@ -1,19 +1,25 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
+import com.fcgl.Listing.MessageQueueReceiveListing.Response.ReceiveListingMessagesResponse;
+import com.fcgl.Listing.Response.IResponse;
+import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.Factories.VendorListingFactory;
 import com.fcgl.Listing.Vendors.model.*;
 import com.fcgl.MessageQueue.IMessageQueueReceiver;
+import com.fcgl.MessageQueue.MessageQueueConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.AMQP.Queue.DeclareOk;
+import sun.jvm.hotspot.utilities.MessageQueue;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
 
 /**
  * ReceiveListingMessages: This class receives messages from RabbitMQ and processes them.
@@ -31,14 +37,27 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
         this.requestId = requestId;
     }
 
-    public void processMessages() {
-        MessageProcessor messageProcessor = new MessageProcessor(messages);
-        MessageProcessorResponse messageProcessorResponse = messageProcessor.processMessages();
-        List<String> badMessages = messageProcessorResponse.getBadRequests();
-        HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = messageProcessorResponse.getVendorProductInformation();
-        List<Vendor> vendors = messageProcessorResponse.getVendors();
-        processGoodMessages(vendors, vendorProductInformation);
-        processBadMessages(badMessages);
+    public IResponse processMessages() {
+        MessageQueueConfig messageQueueConfig = new MessageQueueConfig();
+        if (messageQueueConfig.getIsSuccessfulConnection()) {
+            receive(messageQueueConfig.getChannel(), messageQueueConfig.getConnection());
+            MessageProcessor messageProcessor = new MessageProcessor(messages);
+            MessageProcessorResponse messageProcessorResponse = messageProcessor.processMessages();
+            List<String> badMessages = messageProcessorResponse.getBadRequests();
+            HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = messageProcessorResponse.getVendorProductInformation();
+            List<Vendor> vendors = messageProcessorResponse.getVendors();
+            processGoodMessages(vendors, vendorProductInformation);
+            processBadMessages(badMessages);
+            Integer badMessageSize = badMessages.size();
+            Integer totalMessages = messages.size();
+            Integer successMessageSize = totalMessages - badMessageSize;
+            String format = "ReceiveListingMessages with requestId: %s. Successful Messages: %d; Error Messages: %d";
+            String message = String.format(format, requestId, successMessageSize, badMessageSize);
+            return new Response(false, 200, requestId, message);
+        } else {
+            String message = "There was an error, see logs for more details";//Should probably return a status code along with
+            return new Response(true, 400, requestId, message);
+        }
     }
 
     /**
