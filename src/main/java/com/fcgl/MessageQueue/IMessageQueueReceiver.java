@@ -8,6 +8,13 @@ import java.util.List;
 
 public interface IMessageQueueReceiver {
 
+    /**
+     * Processes the messages from the message queue and maps it to an Object
+     */
     void processMessages();
+
+    /**
+     * Receive messages from the message queue
+     */
     void receive(Channel channel, Connection connection);
 }

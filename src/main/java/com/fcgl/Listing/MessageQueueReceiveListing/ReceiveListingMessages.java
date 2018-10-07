@@ -2,6 +2,7 @@ package com.fcgl.Listing.MessageQueueReceiveListing;
 
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
 import com.fcgl.Listing.Vendors.Vendor;
+import com.fcgl.Listing.Vendors.Factories.VendorListingFactory;
 import com.fcgl.Listing.Vendors.model.*;
 import com.fcgl.MessageQueue.IMessageQueueReceiver;
 import com.rabbitmq.client.Channel;
@@ -23,15 +24,11 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
     private static final Integer MAX_RETRY = 3;
     private static final String[] queueNames = {"listing"};
     private static final String errorQueue = "errorListing";
-    private HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = new HashMap<>();
-    private HashMap<String, Integer> vendorSKUIndexLocation = new HashMap<>();
     private List<String> messages = new ArrayList<>();
-    public HashMap<String, Integer> getVendorSKUIndexLocation() {
-        return vendorSKUIndexLocation;
-    }
+    private String requestId;
 
-    public HashMap<Vendor, ArrayList<IProductInformation>> getVendorProductInformation() {
-        return vendorProductInformation;
+    public ReceiveListingMessages(String requestId) {
+        this.requestId = requestId;
     }
 
     public void processMessages() {
@@ -40,11 +37,29 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
         List<String> badMessages = messageProcessorResponse.getBadRequests();
         HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = messageProcessorResponse.getVendorProductInformation();
         List<Vendor> vendors = messageProcessorResponse.getVendors();
+        processGoodMessages(vendors, vendorProductInformation);
+        processBadMessages(badMessages);
+    }
 
+    /**
+     * Calls the vendorListingFactory for all the successfully mapped messages
+     * @param vendors: The keys for HashMao vendorProductInformation
+     * @param vendorProductInformation: Contains IProductInformation objects that should be listed on a particular vendor (e-commerce)
+     */
+    private void processGoodMessages(List<Vendor> vendors, HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation) {
         for (Vendor vendor : vendors) {
             ArrayList<IProductInformation> productInformations = vendorProductInformation.get(vendor);
-            //call factory
+            VendorListingFactory vendorListingFactory = new VendorListingFactory(productInformations);
+            vendorListingFactory.vendorFactory(vendor, requestId);
         }
+    }
+
+    /**
+     * Sends messages to an errorQueue to investigate issue
+     * @param badMessages: List of messages that were not able to be mapped to IProductInformation Objects
+     */
+    private void processBadMessages(List<String> badMessages) {
+        //TODO: create a sender class and pass it in the list of messages
     }
 
     /**

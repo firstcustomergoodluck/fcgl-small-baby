@@ -7,6 +7,7 @@ import com.fcgl.Listing.Vendors.model.*;
 import com.fcgl.Listing.Vendors.model.Currency;
 import com.google.gson.Gson;
 
+import javax.validation.constraints.Null;
 import java.util.*;
 
 /**
@@ -35,13 +36,7 @@ public class MessageProcessor implements IMessageProcessor {
      */
     public MessageProcessorResponse processMessages() {
         for (String message : messages) {
-            MessageToProductInformationResponse productInfo;
-            try {
-                productInfo = messageToProductInformation(message);
-            } catch(NullPointerException e) {
-                getBadRequests().add(message);
-                continue;
-            }
+            MessageToProductInformationResponse productInfo = messageToProductInformation(message);
             switch (productInfo.getState()) {
                 case INSERT:
                     addProductInformation(productInfo.getProductInformation(), productInfo.getVendor(), productInfo.getVendorSKUId());
@@ -64,41 +59,43 @@ public class MessageProcessor implements IMessageProcessor {
      * @param message: Json formatted String
      * @return The IProductInformation Object that it generated from the message.
      */
-    public MessageToProductInformationResponse messageToProductInformation(String message) throws NullPointerException {
-
+    public MessageToProductInformationResponse messageToProductInformation(String message) {
         HashMap result = new Gson().fromJson(message, HashMap.class);
-
         if (!validateNotNull(result, this.requiredParameters)) {
             return new MessageToProductInformationResponse(State.ERROR);
         }
 
-        Integer vendorID = ((Double) result.get("vendorId")).intValue();
-        String SKU = (String) result.get("sku");
-        Integer quantity = ((Double) result.get("quantity")).intValue();
-        String vendorSKUId = vendorID + "_" + SKU;
-        Vendor vendor = Vendor.getVendor(vendorID);
+        try {
+            Integer vendorID = ((Double) result.get("vendorId")).intValue();
+            String SKU = (String) result.get("sku");
+            Integer quantity = ((Double) result.get("quantity")).intValue();
+            String vendorSKUId = vendorID + "_" + SKU;
+            Vendor vendor = Vendor.getVendor(vendorID);
 
-        if (getVendorSKUIndexLocation().containsKey(vendorSKUId)) {
-            Integer index = getVendorSKUIndexLocation().get(vendorSKUId);
-            IProductInformation productInformation = getVendorProductInformation().get(vendor).get(index);
-            return new MessageToProductInformationResponse(productInformation, vendor, vendorSKUId, quantity);
-        } else {
-            String title = (String) result.get("title");
-            String description = (String) result.get("description");
-            String currency = (String) result.get("currency");
-            String barcode = (String) result.get("barcode");
-            String barcodeType = (String) result.get("barcodeType");
-            Double productPrice = (Double) result.get("price");
-            Integer fulfillLatency = ((Double) result.get("latency")).intValue();//TODO: Not sure if I need this
-            ProductIdentifierType productIdentifierType = ProductIdentifierType.getProductIdentifierType(barcodeType);
-            ProductIdentifier productIdentifier = new ProductIdentifier(productIdentifierType, barcode);
-            ProductDescriptionData productDescriptionData = new ProductDescriptionData(title, description);
-            Currency currencyEnum = Currency.getCurrency(currency);
-            Price price = new Price(currencyEnum, productPrice);
-            Inventory inventory = new Inventory(quantity, fulfillLatency);
-            Product product = new Product(productIdentifier, productDescriptionData);
-            IProductInformation productInformation = new AmazonProduct(SKU, product, price, inventory);
-            return new MessageToProductInformationResponse(productInformation, vendor, vendorSKUId, State.INSERT);
+            if (getVendorSKUIndexLocation().containsKey(vendorSKUId)) {
+                Integer index = getVendorSKUIndexLocation().get(vendorSKUId);
+                IProductInformation productInformation = getVendorProductInformation().get(vendor).get(index);
+                return new MessageToProductInformationResponse(productInformation, vendor, vendorSKUId, quantity);
+            } else {
+                String title = (String) result.get("title");
+                String description = (String) result.get("description");
+                String currency = (String) result.get("currency");
+                String barcode = (String) result.get("barcode");
+                String barcodeType = (String) result.get("barcodeType");
+                Double productPrice = (Double) result.get("price");
+                Integer fulfillLatency = ((Double) result.get("latency")).intValue();//TODO: Not sure if I need this
+                ProductIdentifierType productIdentifierType = ProductIdentifierType.getProductIdentifierType(barcodeType);
+                ProductIdentifier productIdentifier = new ProductIdentifier(productIdentifierType, barcode);
+                ProductDescriptionData productDescriptionData = new ProductDescriptionData(title, description);
+                Currency currencyEnum = Currency.getCurrency(currency);
+                Price price = new Price(currencyEnum, productPrice);
+                Inventory inventory = new Inventory(quantity, fulfillLatency);
+                Product product = new Product(productIdentifier, productDescriptionData);
+                IProductInformation productInformation = new AmazonProduct(SKU, product, price, inventory);
+                return new MessageToProductInformationResponse(productInformation, vendor, vendorSKUId, State.INSERT);
+            }
+        } catch(NullPointerException e) {
+            return new MessageToProductInformationResponse(State.ERROR);
         }
     }
 
