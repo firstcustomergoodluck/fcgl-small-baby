@@ -1,7 +1,6 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
-import com.fcgl.Listing.MessageQueueReceiveListing.Response.ReceiveListingMessagesResponse;
 import com.fcgl.Listing.Response.IResponse;
 import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.Vendor;
@@ -13,13 +12,11 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.AMQP.Queue.DeclareOk;
-import sun.jvm.hotspot.utilities.MessageQueue;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeoutException;
 
 /**
  * ReceiveListingMessages: This class receives messages from RabbitMQ and processes them.
