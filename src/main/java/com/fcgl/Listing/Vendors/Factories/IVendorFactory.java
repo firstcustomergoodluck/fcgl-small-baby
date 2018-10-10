@@ -7,10 +7,11 @@ import com.fcgl.Listing.Vendors.Vendor;
  */
 public interface IVendorFactory {
 
-    /**
-     * Factory for vendor specific tasks
-     * @param vendor: The vendor whose task will begin
-     * @param requestId: A unique id for the task
-     */
-    void vendorFactory(Vendor vendor, String requestId);
+  /**
+   * Factory for vendor specific tasks
+   *
+   * @param vendor: The vendor whose task will begin
+   * @param requestId: A unique id for the task
+   */
+  void vendorFactory(Vendor vendor, String requestId);
 }

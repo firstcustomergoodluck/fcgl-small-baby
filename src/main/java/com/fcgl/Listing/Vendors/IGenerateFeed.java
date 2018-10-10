@@ -2,8 +2,6 @@ package com.fcgl.Listing.Vendors;
 
 import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +9,6 @@ import java.util.List;
  */
 public interface IGenerateFeed {
 
-    Response generateFeed(List<IProductInformation> productInformation) throws InterruptedException;
+  Response generateFeed(List<IProductInformation> productInformation) throws InterruptedException;
 
 }

@@ -5,7 +5,7 @@ package com.fcgl.Exceptions;
  */
 public class RetryLimitException extends Exception {
 
-    public RetryLimitException(String message) {
-        super(message);
-    }
+  public RetryLimitException(String message) {
+    super(message);
+  }
 }

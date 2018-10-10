@@ -4,6 +4,7 @@ public class Inventory {
 
   private int quantity;
   private int fulfillLatency;
+
   public Inventory(int quantity, int fulfillLatency) {
     this.quantity = quantity;
     this.fulfillLatency = fulfillLatency;
@@ -22,15 +23,14 @@ public class Inventory {
   }
 
   /**
-   *
    * The new total inventory quantity.
+   *
    * @param increaseBy the number of quantity to be added
-   * @return
    */
   public int increaseQuantity(int increaseBy) {
     if (increaseBy < 0) {
       final String errorMsgTemplate = "Quantity to increase is negative : %d";
-      throw new IllegalArgumentException(String.format(errorMsgTemplate,increaseBy));
+      throw new IllegalArgumentException(String.format(errorMsgTemplate, increaseBy));
     }
     this.setQuantity(this.getQuantity() + increaseBy);
     return this.getQuantity();
@@ -38,19 +38,21 @@ public class Inventory {
 
   /**
    * The new total inventory quantity.
+   *
    * @param decreaseBy the number of quantity to be taking away
    * @return the
    */
   public int decreaseQuantity(int decreaseBy) {
     if (decreaseBy < 0) {
       final String errorMsgTemplate = "Quantity to decreaseBy is negative: %d";
-      throw new IllegalArgumentException(String.format(errorMsgTemplate,decreaseBy));
+      throw new IllegalArgumentException(String.format(errorMsgTemplate, decreaseBy));
     }
 
     int temp = this.getQuantity() - decreaseBy;
     if (temp < 0) {
       final String errorMsgTemplate = "Not enough quantity, Current %d; Quantity to be decrease %d";
-      throw new IllegalArgumentException(String.format(errorMsgTemplate, this.getQuantity(), decreaseBy));
+      throw new IllegalArgumentException(
+          String.format(errorMsgTemplate, this.getQuantity(), decreaseBy));
     }
     this.setQuantity(this.getQuantity() - decreaseBy);
     return this.getQuantity();

@@ -1,12 +1,12 @@
 package com.fcgl.Listing.Vendors.model;
 
-import com.fcgl.Listing.Vendors.model.Currency;
 import java.util.Objects;
 
 public class Price {
 
   private Currency currency;
   private double price;
+
   public Price(Currency currency, double price) {
     Objects.requireNonNull(currency);
     this.currency = currency;

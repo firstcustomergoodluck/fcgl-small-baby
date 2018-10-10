@@ -9,20 +9,21 @@ import java.util.List;
  * Generates listings to specified vendors.
  */
 public class VendorListingFactory implements IVendorFactory {
-    private List<IProductInformation> productInformations;
 
-    public VendorListingFactory(List<IProductInformation> productInformations) {
-        this.productInformations = productInformations;
-    }
+  private List<IProductInformation> productInformations;
 
-    public void vendorFactory(Vendor vendor, String requestId) {
-        switch (vendor) {
-            case AMAZON:
-                GenerateFeedAMZ generateFeedAMZ = new GenerateFeedAMZ(requestId);
-                generateFeedAMZ.generateFeed(productInformations);
-                break;
-            default:
-                break;
-        }
+  public VendorListingFactory(List<IProductInformation> productInformations) {
+    this.productInformations = productInformations;
+  }
+
+  public void vendorFactory(Vendor vendor, String requestId) {
+    switch (vendor) {
+      case AMAZON:
+        GenerateFeedAMZ generateFeedAMZ = new GenerateFeedAMZ(requestId);
+        generateFeedAMZ.generateFeed(productInformations);
+        break;
+      default:
+        break;
     }
+  }
 }
