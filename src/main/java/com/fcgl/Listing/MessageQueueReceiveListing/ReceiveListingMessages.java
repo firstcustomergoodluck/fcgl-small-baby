@@ -89,7 +89,7 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
    */
   public void receive(Channel channel, Connection connection) {
     for (String queueName : queueNames) {
-      Boolean success = false;
+      boolean success = false;
       Integer retry = 0;
       while (!success & retry < MAX_RETRY) {
         try {
