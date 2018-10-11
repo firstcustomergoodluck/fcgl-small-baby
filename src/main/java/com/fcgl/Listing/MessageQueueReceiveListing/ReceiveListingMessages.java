@@ -6,12 +6,14 @@ import com.fcgl.Listing.Response.Response;
 import com.fcgl.Listing.Vendors.Factories.VendorListingFactory;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
+import com.fcgl.MessageQueue.IMessageQueueConfig;
 import com.fcgl.MessageQueue.IMessageQueueReceiver;
 import com.fcgl.MessageQueue.MessageQueueConfig;
 import com.rabbitmq.client.AMQP.Queue.DeclareOk;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.GetResponse;
+import com.rabbitmq.client.MessageProperties;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,17 +27,26 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
 
   //TODO: Should get queueNames from database
   private static final Integer MAX_RETRY = 3;
-  private static final String[] queueNames = {"listing"};
-  private static final String errorQueue = "errorListing";
+  private static final String[] QUEUE_NAMES = {"listing"};
+  private static final String ERROR_QUEUE_NAME = "errorListing";
   private List<String> messages = new ArrayList<>();
   private String requestId;
+  private IMessageQueueConfig messageQueueConfig;
+  private boolean DURABLE_QUEUE = false;//TODO: Should be moved to a config
 
+  /**
+   * Initializer
+   * @param requestId: Unique ID for the request
+   */
   public ReceiveListingMessages(String requestId) {
     this.requestId = requestId;
+    this.messageQueueConfig = new MessageQueueConfig();
   }
 
+  /**
+   * Receives and processes the messages from RabbitMQ
+   */
   public IResponse processMessages() {
-    MessageQueueConfig messageQueueConfig = new MessageQueueConfig();
     if (messageQueueConfig.getIsSuccessfulConnection()) {
       receive(messageQueueConfig.getChannel(), messageQueueConfig.getConnection());
       MessageProcessor messageProcessor = new MessageProcessor(messages);
@@ -53,7 +64,7 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
       String message = String.format(format, requestId, successMessageSize, badMessageSize);
       return new Response(false, 200, requestId, message);
     } else {
-      String message = "There was an error, see logs for more details";//Should probably return a status code along with
+      String message = "There was an error, see logs for more details";
       return new Response(true, 400, requestId, message);
     }
   }
@@ -81,29 +92,46 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
    * Objects
    */
   private void processBadMessages(List<String> badMessages) {
-    //TODO: create a sender class and pass it in the list of messages
+    Channel channel = messageQueueConfig.getChannel();
+
+    for (String message : badMessages) {
+      boolean success = false;
+      int retry = MAX_RETRY;
+      while (!success & retry != 0) {
+        try {
+          channel.basicPublish("", ERROR_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes("UTF-8"));
+          success = true;
+        } catch (IOException e) {
+          retry--;
+        }
+      }
+      if (retry == 0) {
+        //TODO: log a message
+        break;
+      }
+    }
   }
 
   /**
    * Extracts messages from each queue in the queueNames list.
    */
   public void receive(Channel channel, Connection connection) {
-    for (String queueName : queueNames) {
+    for (String queueName : QUEUE_NAMES) {
       boolean success = false;
-      Integer retry = 0;
-      while (!success & retry < MAX_RETRY) {
+      Integer retry = MAX_RETRY;
+      while (!success & retry != 0) {
         try {
           DeclareOk response2 = channel.queueDeclarePassive(queueName);
           int messageCount = response2.getMessageCount();
-          channel.queueDeclare(queueName, false, false, false, null);
+          channel.queueDeclare(queueName, DURABLE_QUEUE, false, false, null);
           handleDelivery(messageCount, channel, queueName);
           success = true;
         } catch (IOException e) {
-          retry++;
+          retry--;
         }
       }
-      if (retry.equals(MAX_RETRY)) {
-        //log a message
+      if (retry == 0) {
+        //TODO: log a message
         break;
       }
     }
@@ -119,9 +147,9 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
    */
   private void handleDelivery(int messageCount, Channel channel, String queueName) {
     for (int i = 0; i < messageCount; i++) {
-      Boolean success = false;
-      Integer retry = 0;
-      while (!success && retry < MAX_RETRY) {
+      boolean success = false;
+      Integer retry = MAX_RETRY;
+      while (!success && retry != 0) {
         try {
           GetResponse response = channel.basicGet(queueName, false);
           String message = new String(response.getBody());
@@ -130,11 +158,11 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
           messages.add(message);
           success = true;
         } catch (IOException e) {
-          retry++;
+          retry--;
         }
       }
-      if (retry >= 3) {
-        //Log an error
+      if (retry == 0) {
+        //TODO: Log an error
         break;
       }
     }

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Initialized a Connection and Channel for RabbitMQ
  */
-public class MessageQueueConfig {
+public class MessageQueueConfig implements IMessageQueueConfig{
 
   private Connection connection;
   private Channel channel;
