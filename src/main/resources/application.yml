@@ -1,0 +1,6 @@
+server:
+    port: 8082
+
+#//NOTE: It is good security practice that after your database is in production state, you make this none and revoke
+#// all privileges from the MySQL user connected to the Spring application, then give it only
+#//SELECT, UPDATE, INSERT, DELETE

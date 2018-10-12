@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:="amzn-envelope.xsd">
-    <Header>
-        <DocumentVersion>1.01</DocumentVersion>
-        <MerchantIdentifier>M_EXAMPLE_123456</MerchantIdentifier>
-    </Header>
-    <MessageType>Product</MessageType>
-    <PurgeAndReplace>false</PurgeAndReplace>
-    <Message>
-        <MessageID>1</MessageID>
-        <OperationType>Update</OperationType>
-        <Product>
-            <SKU>1</SKU>
-            <StandardProductID>
-                <Type>ISBN</Type>
-                <Value>9781133274537</Value>
-            </StandardProductID>
-            <ProductTaxCode>A_BOOKS_GEN</ProductTaxCode>
-            <DescriptionData>
-                <Title>Statistics for Business and Economics</Title>
-                <Description>This is an example product description.</Description>
-                <BulletPoint>Example Bullet Point 1</BulletPoint>
-                <BulletPoint>Example Bullet Point 2</BulletPoint>
-                <MSRP currency="USD">25.19</MSRP>
-                <Manufacturer>Example Product Manufacturer</Manufacturer>
-                <ItemType>Textbook</ItemType>
-            </DescriptionData>
-            <ProductData>
-                <Books>
-                    <ProductType>
-                        <BooksMisc>
-                            <Author>Anderson</Author>
-                            <Binding>Textbook</Binding>
-                            <Edition>12e</Edition>
-                        </BooksMisc>
-                    </ProductType>
-                </Books>
-            </ProductData>
-        </Product>
-    </Message>
+  xsi:="amzn-envelope.xsd">
+  <Header>
+    <DocumentVersion>1.01</DocumentVersion>
+    <MerchantIdentifier>M_EXAMPLE_123456</MerchantIdentifier>
+  </Header>
+  <MessageType>Product</MessageType>
+  <PurgeAndReplace>false</PurgeAndReplace>
+  <Message>
+    <MessageID>1</MessageID>
+    <OperationType>Update</OperationType>
+    <Product>
+      <SKU>1</SKU>
+      <StandardProductID>
+        <Type>ISBN</Type>
+        <Value>9781133274537</Value>
+      </StandardProductID>
+      <DescriptionData>
+        <Title>Statistics for Business and Economics</Title>
+        <Description>This is an example product description.</Description>
+      </DescriptionData>
+    </Product>
+  </Message>
 </AmazonEnvelope>

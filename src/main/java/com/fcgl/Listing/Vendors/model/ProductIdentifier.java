@@ -4,6 +4,7 @@ public class ProductIdentifier {
 
   ProductIdentifierType productIdentifierType;
   String value;
+
   public ProductIdentifier(ProductIdentifierType productIdentifierType, String value) {
     this.productIdentifierType = productIdentifierType;
     this.value = value;

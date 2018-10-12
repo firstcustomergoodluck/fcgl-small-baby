@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class InventoryTest {
 
@@ -86,7 +86,7 @@ class InventoryTest {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
       inventory2.decreaseQuantity(-1);
     });
-    assertEquals("Quantity to decreaseBy is negative: -1",exception.getMessage());
+    assertEquals("Quantity to decreaseBy is negative: -1", exception.getMessage());
   }
 
   @Test
@@ -95,6 +95,7 @@ class InventoryTest {
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
       inventory.decreaseQuantity(2);
     });
-    assertEquals("Not enough quantity, Current 1; Quantity to be decrease 2",exception.getMessage());
+    assertEquals("Not enough quantity, Current 1; Quantity to be decrease 2",
+        exception.getMessage());
   }
 }

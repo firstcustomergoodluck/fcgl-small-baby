@@ -6,7 +6,9 @@ public class Product {
 
   private ProductIdentifier productIdentifier;
   private ProductDescriptionData productDescriptionData;
-  public Product(ProductIdentifier productIdentifier, ProductDescriptionData productDescriptionData) {
+
+  public Product(ProductIdentifier productIdentifier,
+      ProductDescriptionData productDescriptionData) {
     Objects.requireNonNull(productDescriptionData);
     Objects.requireNonNull(productIdentifier);
     this.productIdentifier = productIdentifier;

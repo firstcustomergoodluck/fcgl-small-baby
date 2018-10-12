@@ -10,6 +10,7 @@ public class ProductDescriptionData {
 
   private String title;
   private String description;
+
   public ProductDescriptionData(String title, String description) {
     Objects.requireNonNull(title);
     Objects.requireNonNull(description);

@@ -1,7 +1,7 @@
 package com.fcgl.Listing.Vendors.Amazon.FeedStatus;
 
 public class FeedStatusAMZ {
-    //    /**
+  //    /**
 //     * Returns a list of feed submissions. Used to determined status of feed submission
 //     *
 //     * The GetFeedSubmissionList request can return a maximum of 100 results. If there are additional results to return,

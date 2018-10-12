@@ -18,8 +18,8 @@
         <Pattern>${LOG_PATTERN}</Pattern>
       </PatternLayout>
       <Policies>
-        <TimeBasedTriggeringPolicy interval="1" />
-        <SizeBasedTriggeringPolicy size="10MB" />
+        <TimeBasedTriggeringPolicy interval="1"/>
+        <SizeBasedTriggeringPolicy size="10MB"/>
       </Policies>
       <DefaultRolloverStrategy max="10"/>
     </RollingFile>
@@ -28,13 +28,13 @@
   <Loggers>
     <AsyncLogger name="com.fgcl" level="debug"
       additivity="false">
-      <AppenderRef ref="ConsoleAppender" />
-      <AppenderRef ref="FileAppender" />
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="FileAppender"/>
     </AsyncLogger>
 
     <Root level="info">
-      <AppenderRef ref="ConsoleAppender" />
-      <AppenderRef ref="FileAppender" />
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="FileAppender"/>
     </Root>
   </Loggers>
 </Configuration>
