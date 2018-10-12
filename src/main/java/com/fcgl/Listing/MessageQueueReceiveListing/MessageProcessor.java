@@ -1,5 +1,6 @@
 package com.fcgl.Listing.MessageQueueReceiveListing;
 
+import com.fcgl.Listing.MessageQueueReceiveListing.Messages.ProductInformationMessage;
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageProcessorResponse;
 import com.fcgl.Listing.MessageQueueReceiveListing.Response.MessageToProductInformationResponse;
 import com.fcgl.Listing.Vendors.Vendor;
@@ -16,7 +17,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Processes Messages (Strings) and maps them to IProductInformation objects
@@ -27,9 +27,6 @@ public class MessageProcessor implements IMessageProcessor {
   private HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation = new HashMap<>();
   private HashMap<String, Integer> vendorSKUIndexLocation = new HashMap<>();
   private List<String> badRequests = new ArrayList<>();
-  //TODO: Should populate from database?
-  private String[] requiredParameters = {"vendorId", "sku", "quantity", "title", "description",
-      "currency", "barcode", "barcodeType", "price"};
   private List<Vendor> vendors = new ArrayList<>();
 
   /**
@@ -74,15 +71,12 @@ public class MessageProcessor implements IMessageProcessor {
    * @return The IProductInformation Object that it generated from the message.
    */
   public MessageToProductInformationResponse messageToProductInformation(String message) {
-    HashMap result = new Gson().fromJson(message, HashMap.class);
-    if (!validateNotNull(result, this.requiredParameters)) {
-      return new MessageToProductInformationResponse(State.ERROR);
-    }
-
+    Gson gson = new Gson();
+    ProductInformationMessage messageObject = gson.fromJson(message, ProductInformationMessage.class);
     try {
-      Integer vendorID = ((Double) result.get("vendorId")).intValue();
-      String SKU = (String) result.get("sku");
-      Integer quantity = ((Double) result.get("quantity")).intValue();
+      Integer vendorID = messageObject.getVendorId();
+      String SKU = messageObject.getSku();
+      Integer quantity = messageObject.getQuantity();
       String vendorSKUId = vendorID + "_" + SKU;
       Vendor vendor = Vendor.getVendor(vendorID);
 
@@ -93,14 +87,13 @@ public class MessageProcessor implements IMessageProcessor {
         return new MessageToProductInformationResponse(productInformation, vendor, vendorSKUId,
             quantity);
       } else {
-        String title = (String) result.get("title");
-        String description = (String) result.get("description");
-        String currency = (String) result.get("currency");
-        String barcode = (String) result.get("barcode");
-        String barcodeType = (String) result.get("barcodeType");
-        Double productPrice = (Double) result.get("price");
-        Integer fulfillLatency = ((Double) result.get("latency"))
-            .intValue();//TODO: Not sure if I need this
+        String title = messageObject.getTitle();
+        String description = messageObject.getDescription();
+        String currency = messageObject.getCurrency();
+        String barcode = messageObject.getBarcode();
+        String barcodeType = messageObject.getBarcodeType();
+        Double productPrice = messageObject.getPrice();
+        Integer fulfillLatency = messageObject.getLatency();//TODO: Not sure if I need this
         ProductIdentifierType productIdentifierType = ProductIdentifierType
             .getProductIdentifierType(barcodeType);
         ProductIdentifier productIdentifier = new ProductIdentifier(productIdentifierType, barcode);
@@ -152,24 +145,6 @@ public class MessageProcessor implements IMessageProcessor {
   private void addProductInformationSKUIndexLocation(String vendorSKUId, Integer index) {
     if (!vendorSKUIndexLocation.containsKey(vendorSKUId)) {
       vendorSKUIndexLocation.put(vendorSKUId, index);
-    }
-  }
-
-  /**
-   * Validates that message contains all required parameters
-   *
-   * @param messageMap: message map being evaluated
-   * @param requiredParameters: list of parameters required
-   * @return true if a valid message | false if missing any required parameters
-   */
-  private Boolean validateNotNull(HashMap messageMap, String[] requiredParameters) {
-    try {
-      for (String value : requiredParameters) {
-        Objects.requireNonNull(messageMap.get(value));
-      }
-      return true;
-    } catch (NullPointerException e) {
-      return false;
     }
   }
 
