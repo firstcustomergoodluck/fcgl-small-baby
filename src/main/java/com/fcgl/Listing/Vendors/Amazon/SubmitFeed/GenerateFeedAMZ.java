@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 //Java Imports
 //FCGL Imports
@@ -39,6 +41,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
   private final String merchantId = "";
   private final String marketplaceId = "";
   private final int[] retryWaitTime = {1000, 4000, 16000, 30000};//This was recommended by Amazon
+  private static final Logger logger = LogManager.getLogger("GenerateFeedAMZ");
 
   /**
    * GenerateFeedAMZ constructor
@@ -123,6 +126,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
     if (invokeSubmitFeedResponse.isError()) {
       int statusCode = invokeSubmitFeedResponse.getStatusCode();
       if (retryAttempt > 4) {
+        //TODO: Add the xml file location to a queue...
         throw new RetryLimitException("Retry Attempts Exceeded for submitFeed()");
       }
 
@@ -148,10 +152,8 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
    */
   //TODO: Instead of printing need to log
   private Response invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
-    //HashMap<String, Object> responseResult = new HashMap<>();
-    //SubmitFeedSuccessAMZ submitFeedSuccess = new SubmitFeedSuccessAMZ();
-
     try {
+      StringBuilder builder = new StringBuilder();
       String amzFeedSubmissionid = "";
       String amzProcessingStatus = "";
       String timestamp = "";
@@ -159,99 +161,76 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
       int statusCode;
 
       SubmitFeedResponse response = service.submitFeedFromFile(request);
-      System.out.println("SubmitFeed Header");
-      System.out.println("SubmitFeed Action Response");
-      System.out
-          .println("=============================================================================");
-      System.out.println();
-
-      System.out.print("    SubmitFeedResponse");
-      System.out.println();
+      builder.append("SubmitFeed Header\n");
+      builder.append("SubmitFeed Action Response\n");
+      builder.append("=============================================================================\n\n");
+      builder.append("    SubmitFeedResponse\n");
       if (response.isSetSubmitFeedResult()) {
-        System.out.print("        SubmitFeedResult");
-        System.out.println();
+        builder.append("        SubmitFeedResult\n");
         SubmitFeedResult submitFeedResult = response
             .getSubmitFeedResult();
         if (submitFeedResult.isSetFeedSubmissionInfo()) {
-          System.out.print("            FeedSubmissionInfo");
-          System.out.println();
+          builder.append("            FeedSubmissionInfo\n");
           FeedSubmissionInfo feedSubmissionInfo = submitFeedResult
               .getFeedSubmissionInfo();
           if (feedSubmissionInfo.isSetFeedSubmissionId()) {
-            System.out.print("                FeedSubmissionId");
-            System.out.println();
-            System.out.print("                    "
-                + feedSubmissionInfo.getFeedSubmissionId());
-            System.out.println();
             amzFeedSubmissionid = feedSubmissionInfo.getFeedSubmissionId();
+            builder.append("                FeedSubmissionId\n");
+            builder.append("                    ");
+            builder.append(amzFeedSubmissionid);
+            builder.append("\n");
           }
           if (feedSubmissionInfo.isSetFeedType()) {
-            System.out.print("                FeedType");
-            System.out.println();
-            System.out.print("                    "
-                + feedSubmissionInfo.getFeedType());
-            System.out.println();
+            builder.append("                FeedType\n");
+            builder.append("                    ");
+            builder.append(feedSubmissionInfo.getFeedType());
+            builder.append("\n");
           }
           if (feedSubmissionInfo.isSetSubmittedDate()) {
-            System.out.print("                SubmittedDate");
-            System.out.println();
-            System.out.print("                    "
-                + feedSubmissionInfo.getSubmittedDate());
-            System.out.println();
+            builder.append("                SubmittedDate\n");
+            builder.append("                    ");
+            builder.append("                    ");
+            builder.append(feedSubmissionInfo.getSubmittedDate());
+            builder.append("\n");
           }
           if (feedSubmissionInfo.isSetFeedProcessingStatus()) {
-            System.out
-                .print("                FeedProcessingStatus");
-            System.out.println();
-            System.out.print("                    "
-                + feedSubmissionInfo.getFeedProcessingStatus());
-            System.out.println();
             amzProcessingStatus = feedSubmissionInfo.getFeedSubmissionId();
+            builder.append("                FeedProcessingStatus\n");
+            builder.append("                    ");
+            builder.append(amzProcessingStatus);
+            builder.append("\n");
           }
           if (feedSubmissionInfo.isSetStartedProcessingDate()) {
-            System.out
-                .print("                StartedProcessingDate");
-            System.out.println();
-            System.out
-                .print("                    "
-                    + feedSubmissionInfo
-                    .getStartedProcessingDate());
-            System.out.println();
+            builder.append("                StartedProcessingDate\n");
+            builder.append("                    ");
+            builder.append(feedSubmissionInfo.getStartedProcessingDate());
+            builder.append("\n");
           }
           if (feedSubmissionInfo.isSetCompletedProcessingDate()) {
-            System.out
-                .print("                CompletedProcessingDate");
-            System.out.println();
-            System.out.print("                    "
-                + feedSubmissionInfo
-                .getCompletedProcessingDate());
-            System.out.println();
+            builder.append("                CompletedProcessingDate\n");
+            builder.append("                    ");
+            builder.append(feedSubmissionInfo.getCompletedProcessingDate());
+            builder.append("\n");
           }
         }
       }
       if (response.isSetResponseMetadata()) {
-        System.out.print("        ResponseMetadata");
-        System.out.println();
-        ResponseMetadata responseMetadata = response
-            .getResponseMetadata();
+        builder.append("        ResponseMetadata\n");
+        ResponseMetadata responseMetadata = response.getResponseMetadata();
         if (responseMetadata.isSetRequestId()) {
-          System.out.print("            RequestId");
-          System.out.println();
-          System.out.print("                "
-              + responseMetadata.getRequestId());
-          System.out.println();
           amzRequestId = responseMetadata.getRequestId();
+          builder.append("            RequestId\n");
+          builder.append("                ");
+          builder.append(amzRequestId);
+          builder.append("\n");
         }
       }
-      System.out.println(response
-          .getResponseHeaderMetadata());//Has some useful stuff in here that maybe I want??? I should defintly log the timestamp
-      System.out.println();
-      System.out.println();
-      //submitFeedSuccess.setTimestamp();
-      //submitFeedSuccess.setStatusCode(200);
+      builder.append(response.getResponseHeaderMetadata());
+      builder.append("\n\n\n");
+      logger.info(builder.toString());
       timestamp = response.getResponseHeaderMetadata().getTimestamp();
       statusCode = 200;
-
+      //TODO: AMZRequestId should go to a queue
       String message = String.format("SubmitFeed Request Success:" +
               " Status Code: %d," +
               " AMZRequestId: %s," +
@@ -263,19 +242,31 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
       return new Response(false, statusCode, getRequestId(), message);
 
     } catch (MarketplaceWebServiceException ex) {
+      StringBuilder builder = new StringBuilder();
       String message = ex.getMessage();
       int statusCode = ex.getStatusCode();
       String amzErrorCode = ex.getErrorCode();
       String amzErrorType = ex.getErrorType();
       String amzRequestId = ex.getRequestId();
       String timestamp = ex.getResponseHeaderMetadata().getTimestamp();
-      System.out.println("Caught Exception: " + message);
-      System.out.println("Response Status Code: " + ex.getStatusCode());
-      System.out.println("Error Code: " + ex.getErrorCode());
-      System.out.println("Error Type: " + ex.getErrorType());
-      System.out.println("Request ID: " + ex.getRequestId());
-      System.out.print("XML: " + ex.getXML());
-      System.out.println("ResponseHeaderMetadata: " + ex.getResponseHeaderMetadata());
+      builder.append("Caught Exception: ");
+      builder.append(message);
+      builder.append("\nResponse Status Code: ");
+      builder.append(ex.getStatusCode());
+      builder.append("\nError Code: ");
+      builder.append(amzErrorCode);
+      builder.append("\nError Type: ");
+      builder.append(amzErrorType);
+      builder.append("\nRequest ID: ");
+      builder.append(amzRequestId);
+      builder.append("\nTimestamp: ");
+      builder.append(timestamp);
+      builder.append("\nXML: ");
+      builder.append(ex.getXML());
+      builder.append("\nResponseHeaderMetadata: ");
+      builder.append(ex.getResponseHeaderMetadata());
+      builder.append("\n");
+      logger.error(builder.toString());
 
       return new Response(true, statusCode, getRequestId(), message);
 
