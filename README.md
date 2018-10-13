@@ -26,7 +26,7 @@ Read the gradle docs for more information
   - PR title: TEST-123 Updated README
   - Branch: git checkout -b TEST-123_updatingReadMe
 
-##Database Set Up
+## Database Set Up
 * Install mysql on local machine
     * Mac: ```$ brew install mysql```
     * //TODO: Insert Link
@@ -45,12 +45,12 @@ Read the gradle docs for more information
 * You can now log into mysql:
 ```$ mysql -u fcgl-user -p```
 
-##Dev Set Up
+## Dev Set Up
 
 **Start up:**
 1. Clone this repo
 
-####Run as an app
+#### Run as an app
 1. ./gradlew build
 2. java -jar {jar_file.jar} ```Example: java -jar build/libs/fcgl-small-baby-0.0.1-SNAPSHOT.jar``` 
 
