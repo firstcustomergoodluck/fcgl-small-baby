@@ -8,7 +8,9 @@ import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
 import com.fcgl.MessageQueue.IMessageQueueConfig;
 import com.fcgl.MessageQueue.IMessageQueueReceiver;
+import com.fcgl.MessageQueue.IMessageQueueSender;
 import com.fcgl.MessageQueue.MessageQueueConfig;
+import com.fcgl.MessageQueue.MessageQueueSender;
 import com.rabbitmq.client.AMQP.Queue.DeclareOk;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -32,6 +34,7 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
   private List<String> messages = new ArrayList<>();
   private String requestId;
   private IMessageQueueConfig messageQueueConfig;
+  private IMessageQueueSender messageQueueSender;
   private boolean DURABLE_QUEUE = false;//TODO: Should be moved to a config
 
   /**
@@ -41,6 +44,7 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
   public ReceiveListingMessages(String requestId) {
     this.requestId = requestId;
     this.messageQueueConfig = new MessageQueueConfig();
+    this.messageQueueSender = new MessageQueueSender(messageQueueConfig);
   }
 
   /**
@@ -80,7 +84,8 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
       HashMap<Vendor, ArrayList<IProductInformation>> vendorProductInformation) {
     for (Vendor vendor : vendors) {
       ArrayList<IProductInformation> productInformations = vendorProductInformation.get(vendor);
-      VendorListingFactory vendorListingFactory = new VendorListingFactory(productInformations);
+      VendorListingFactory vendorListingFactory = new VendorListingFactory(productInformations,
+          messageQueueSender);
       vendorListingFactory.vendorFactory(vendor, requestId);
     }
   }
@@ -92,24 +97,7 @@ public class ReceiveListingMessages implements IMessageQueueReceiver {
    * Objects
    */
   private void processBadMessages(List<String> badMessages) {
-    Channel channel = messageQueueConfig.getChannel();
-
-    for (String message : badMessages) {
-      boolean success = false;
-      int retry = MAX_RETRY;
-      while (!success & retry != 0) {
-        try {
-          channel.basicPublish("", ERROR_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes("UTF-8"));
-          success = true;
-        } catch (IOException e) {
-          retry--;
-        }
-      }
-      if (retry == 0) {
-        //TODO: log a message
-        break;
-      }
-    }
+    messageQueueSender.bulkSend(badMessages, ERROR_QUEUE_NAME);
   }
 
   /**

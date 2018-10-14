@@ -3,6 +3,7 @@ package com.fcgl.Listing.Vendors.Factories;
 import com.fcgl.Listing.Vendors.Amazon.SubmitFeed.GenerateFeedAMZ;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
+import com.fcgl.MessageQueue.IMessageQueueSender;
 import java.util.List;
 
 /**
@@ -11,13 +12,16 @@ import java.util.List;
 public class VendorListingFactory implements IVendorFactory {
 
   private List<IProductInformation> productInformations;
+  private IMessageQueueSender messageQueueSender;
 
   /**
    * Initializer
    * @param productInformations: The Products being listed for a particular vendor
    */
-  public VendorListingFactory(List<IProductInformation> productInformations) {
+  public VendorListingFactory(List<IProductInformation> productInformations,
+      IMessageQueueSender messageQueueSender) {
     this.productInformations = productInformations;
+    this.messageQueueSender = messageQueueSender;
   }
 
   /**
@@ -28,7 +32,7 @@ public class VendorListingFactory implements IVendorFactory {
   public void vendorFactory(Vendor vendor, String requestId) {
     switch (vendor) {
       case AMAZON:
-        GenerateFeedAMZ generateFeedAMZ = new GenerateFeedAMZ(requestId);
+        GenerateFeedAMZ generateFeedAMZ = new GenerateFeedAMZ(requestId, messageQueueSender);
         generateFeedAMZ.generateFeed(productInformations);
         break;
       default:
