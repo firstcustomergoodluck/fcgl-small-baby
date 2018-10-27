@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
  * Part TWO of AMAZON submit listing workflow.
  * Checks if submissions have passed the PROCESSING state
  */
-public class GenerateFeedSubmissionList  extends AbstractAMZService {
+public class GenerateFeedSubmissionList  extends AbstractAMZService implements IGenerateFeedSubmissionList {
   private final String requestId;
   private IMessageQueueSender messageQueueSender;
   private final int[] retryWaitTime = {1000, 4000, 16000, 30000};//This was recommended by Amazon //TODO: Should put this somewhere else

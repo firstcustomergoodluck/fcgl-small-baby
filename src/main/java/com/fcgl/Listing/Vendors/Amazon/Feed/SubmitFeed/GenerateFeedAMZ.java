@@ -75,7 +75,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
       return new Response(true, statusCode, getRequestId(), message);
     } catch (InterruptedException e) {
       //do some retry logic
-      return null;
+      return new Response(true, 400, getRequestId(), e.getMessage());
     }
   }
 
