@@ -1,6 +1,6 @@
 package com.fcgl.Listing.Vendors.Factories;
 
-import com.fcgl.Listing.Vendors.Amazon.SubmitFeed.GenerateFeedAMZ;
+import com.fcgl.Listing.Vendors.Amazon.Feed.SubmitFeed.GenerateFeedAMZ;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
 import com.fcgl.MessageQueue.IMessageQueueSender;
