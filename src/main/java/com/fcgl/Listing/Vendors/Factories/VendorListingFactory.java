@@ -1,6 +1,6 @@
 package com.fcgl.Listing.Vendors.Factories;
 
-import com.fcgl.Listing.Vendors.Amazon.SubmitFeed.GenerateFeedAMZ;
+import com.fcgl.Listing.Vendors.Amazon.Feed.SubmitFeed.GenerateFeedAMZ;
 import com.fcgl.Listing.Vendors.Vendor;
 import com.fcgl.Listing.Vendors.model.IProductInformation;
 import com.fcgl.MessageQueue.IMessageQueueSender;
@@ -33,7 +33,7 @@ public class VendorListingFactory implements IVendorFactory {
     switch (vendor) {
       case AMAZON:
         GenerateFeedAMZ generateFeedAMZ = new GenerateFeedAMZ(requestId, messageQueueSender);
-        generateFeedAMZ.generateFeed(productInformations);
+        generateFeedAMZ.generateFeed(productInformations);//TODO: I should do something with the response I get from here... At the very least log it...
         break;
       default:
         break;

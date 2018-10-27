@@ -25,6 +25,19 @@ public class Response implements IResponse {
     this.requestId = requestId;
   }
 
+  /**
+   * @param message: Descriptive message of response
+   * @param requestId: requestId
+   * @param statusCode: Status code
+   */
+  public Response(int statusCode, String requestId, String message) {
+    validateConstructor(message, requestId);
+    this.error = false;
+    this.message = message;
+    this.statusCode = statusCode;
+    this.requestId = requestId;
+  }
+
   public boolean isError() {
     return error;
   }
