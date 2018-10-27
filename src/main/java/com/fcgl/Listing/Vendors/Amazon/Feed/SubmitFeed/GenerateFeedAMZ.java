@@ -1,4 +1,4 @@
-package com.fcgl.Listing.Vendors.Amazon.SubmitFeed;
+package com.fcgl.Listing.Vendors.Amazon.Feed.SubmitFeed;
 //Amazon Imports
 
 import com.amazonaws.mws.MarketplaceWebService;
@@ -23,7 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 //Java Imports
-//FCGL Imports
+//FCGL Imports WHAT
 
 //TODO: Need to add a log under every error
 //TODO: Need to add a log after a successful API call
@@ -44,7 +44,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
   private final int[] retryWaitTime = {1000, 4000, 16000, 30000};//This was recommended by Amazon
   private static final Logger logger = LogManager.getLogger("GenerateFeedAMZ");
   private IMessageQueueSender messageQueueSender;
-  private final String FEED_SUBMISSION_QUEUE = "FeedSubmissionIds";
+  private final String FEED_SUBMISSION_QUEUE = "FeedProcessing";
   private final String FAILED_XML_UPLOAD = "XMLLocation";
 
   /**
@@ -104,6 +104,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
    * @throws RetryLimitException: Will be thrown when the retry limit is reached
    * @throws InterruptedException: Thread error
    */
+  //TODO: Update retry logic to be consistent to how we do the rest...
   private Response submitFeed(String fileLocation, MarketplaceWebService service, int retryAttempt)
       throws RetryLimitException, InterruptedException {
     IdList marketplaces = new IdList(Arrays.asList(marketplaceId));
@@ -117,6 +118,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
       request.setFeedContent(new FileInputStream(fileLocation));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+      //TODO: This is a really bad error...
       String message = String
           .format("The file: %s was not found, try regenerating the file", fileLocation);
       int statusCode = 404;
@@ -145,7 +147,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
 
 
   /**
-   * Submit Feed request sample Uploads a file for processing together with the necessary metadata
+   * Submit Feed request Uploads a file for processing together with the necessary metadata
    * to process the file, such as which type of feed it is. PurgeAndReplace if true means that your
    * existing e.g. inventory is wiped out and replace with the contents of this feed - use with
    * caution (the default is false).
@@ -154,7 +156,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
    * TODO: Should save FeedSubmissionId to database
    * @param service: instance of MarketplaceWebService service
    * @param request: a SubmitFeedRequest
-   * @return Response: A Response is one of SubmitFeedSuccessAMZ or ErrorHandlerAMZ.
+   * @return Response Object
    */
   private Response invokeSubmitFeed(MarketplaceWebService service, SubmitFeedRequest request) {
     try {
@@ -248,6 +250,7 @@ public class GenerateFeedAMZ extends AbstractAMZService implements IGenerateFeed
       return new Response(false, statusCode, getRequestId(), message);
 
     } catch (MarketplaceWebServiceException ex) {
+      //TODO: This can be taken out... handler does the same logic now
       StringBuilder builder = new StringBuilder();
       String message = ex.getMessage();
       int statusCode = ex.getStatusCode();
