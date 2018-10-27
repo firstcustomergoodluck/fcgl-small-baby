@@ -99,6 +99,37 @@ User-Agent: <Your User Agent Header>
 &Signature=SvSExamplefZpSignaturex2cs%3D
 ```
 
+## GetFeedSubmissionList
+* Returns a list og all feed submissions submitted in the previous 90 days
+
+* ```Throttling```: Request Quota 10 Requests.
+* ```Restore Rate```: One request every 45 seconds.
+* ```Hourly request quota```: 80 request per hour
+
+##### Request Parameters:
+
+* ```FeedSubmissionIdList```: A structured list of no more than 100 FeedSubmmissionId values.
+* ```MaxCount```: Integer that indicates the maximum number of feed submissions to return in the list.
+* ```FeedTypeList```: A structured list of one or more FeedType values.
+* ```FeedProcessingStatusList```: A structured list of one or more feed processing statuses.
+* ```SubmittedFromDate```: The earliest submission date that you are looking for
+* ```SubmittedToDate```: The latest submission date that you are looking for
+
+#### Feed Processing Status
+* ```_AWAITING_ASYNCHRONOUS_REPLY_```: The request is being processed, but is waiting for external
+ information before it can complete.
+* ```_CANCELLED_```: The request has been aborted due to a fatal error.
+* ```_DONE_```The request has been processed. You can call the GetFeedSubmissionResult operation
+to receive a processing report that describes which records in the feed were successful and which
+records generated errors.
+* ```_IN_PROGRESS_	```: The request is being processed.
+* ```_IN_SAFETY_NET_```: The request is being processed, but the system has determined that
+there is a potential error with the feed (for example, the request will remove all inventory
+from a seller's account.) An Amazon seller support associate will contact the seller
+to confirm whether the feed should be processed.
+* ```_SUBMITTED_```: The request has been received, but has not yet started processing.
+* ```_UNCONFIRMED_```: The request is pending.
+
 ##Endpoints & MarketplaceId
 
 Endpoints: 
